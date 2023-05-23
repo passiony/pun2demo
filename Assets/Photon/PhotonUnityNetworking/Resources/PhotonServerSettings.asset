@@ -18,19 +18,19 @@ MonoBehaviour:
     AppIdChat: 
     AppIdVoice: 
     AppVersion: 
-    UseNameServer: 1
-    FixedRegion: 
-    Server: 
-    Port: 8899
-    ProxyServer: 
-    Protocol: 0
+    UseNameServer: 0
+    FixedRegion: cn
+    Server: 192.168.0.95
+    Port: 4530
+    ProxyServer: NameServer
+    Protocol: 1
     EnableProtocolFallback: 1
     AuthMode: 0
     EnableLobbyStatistics: 0
     NetworkLogging: 1
-  DevRegion: jp
-  PunLogging: 0
-  EnableSupportLogger: 0
+  DevRegion: cn
+  PunLogging: 1
+  EnableSupportLogger: 1
   RunInBackground: 1
   StartInOfflineMode: 0
   RpcList:
