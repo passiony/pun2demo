@@ -6,6 +6,7 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     private CharacterController controller;
+    private Animator animator;
     
     //这里是人物行走时的速度
     public float walkSpeed = 5f;
@@ -35,6 +36,7 @@ public class PlayerMovement : MonoBehaviour
     void Awake()
     {
         controller = this.GetComponent<CharacterController>();
+        animator = this.GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -61,10 +63,16 @@ public class PlayerMovement : MonoBehaviour
         Vector3 move = transform.right * x + transform.forward * z;
 
         float speed = walkSpeed;
+        float scale = 1;
         if (Input.GetKey(KeyCode.LeftShift))
         {
             speed = runSpeed;
+            scale = 2;
         }
+
+        animator.SetFloat("HorizontalMovement", x *scale);
+        animator.SetFloat("ForwardMovement", z *scale);
+        
         //将控制的方向与速度相乘，就能实现物体的运动，同样，这里的Time.deltaTime也是解决帧率问题
         controller.Move(move * speed * Time.deltaTime);
         

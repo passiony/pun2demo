@@ -223,7 +223,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1857577044
 PrefabInstance:
@@ -283,7 +283,7 @@ PrefabInstance:
     - target: {fileID: 9500000, guid: 4f853fc010b06f7409005ef8e646e2f0, type: 3}
       propertyPath: m_Controller
       value: 
-      objectReference: {fileID: 9100000, guid: 2d9ab56181c2ca34abcc6645243cf341, type: 2}
+      objectReference: {fileID: 9100000, guid: a6c680191cdef964aae8968f3c9754ee, type: 2}
     - target: {fileID: 9500000, guid: 4f853fc010b06f7409005ef8e646e2f0, type: 3}
       propertyPath: m_WarningMessage
       value: 
@@ -358,6 +358,11 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 1, z: 0}
+--- !u!4 &1857577049 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 400008, guid: 4f853fc010b06f7409005ef8e646e2f0, type: 3}
+  m_PrefabInstance: {fileID: 1857577044}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2102501081
 GameObject:
   m_ObjectHideFlags: 0
@@ -369,6 +374,7 @@ GameObject:
   - component: {fileID: 2102501084}
   - component: {fileID: 2102501083}
   - component: {fileID: 2102501082}
+  - component: {fileID: 2102501085}
   m_Layer: 0
   m_Name: Camera
   m_TagString: Untagged
@@ -407,8 +413,8 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.3
-  far clip plane: 1000
+  near clip plane: 0.04
+  far clip plane: 200
   field of view: 60
   orthographic: 0
   orthographic size: 5
@@ -434,11 +440,25 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2102501081}
-  m_LocalRotation: {x: -0.32037216, y: -0.07885708, z: 0.026857017, w: -0.94362175}
-  m_LocalPosition: {x: -0.4222852, y: 2.8667183, z: -2.038734}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.758, z: 0.2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_Father: {fileID: 1857577049}
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2102501085
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2102501081}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a5799ee2a8f7bb4993a898b7cea88ef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mouseSpeed: 100
+  playerBody: {fileID: 1857577049}
