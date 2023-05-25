@@ -103,7 +103,7 @@ namespace Photon.Pun
         public object[] InstantiationData
         {
             get { return this.instantiationDataField; }
-            protected internal set { this.instantiationDataField = value; }
+            set { this.instantiationDataField = value; }
         }
 
         internal object[] instantiationDataField;
