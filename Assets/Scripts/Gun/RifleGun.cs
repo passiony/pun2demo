@@ -35,6 +35,11 @@ public class RifleGun : IGun
         }
     }
 
+    public override void Load()
+    {
+        
+    }
+
     void Fire()
     {
         BulletCount--;
@@ -44,7 +49,6 @@ public class RifleGun : IGun
         // Debug.DrawLine(root.position, root.position + root.forward * 100, Color.red);
         if (Physics.Raycast(root.position, root.forward, out hit))
         {
-            Debug.Log("hit:" + hit.collider.name);
             if (hit.collider.CompareTag("Player"))
             {
                 var player = hit.collider.GetComponent<PlayerController>();

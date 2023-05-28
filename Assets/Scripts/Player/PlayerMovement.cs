@@ -36,7 +36,8 @@ public class PlayerMovement : MonoBehaviourPun
     public float mouseSpeed = 100f;
     float yRotation = 0f;
 
-    // Start is called before the first frame update
+    private bool m_Dead;
+    
     void Awake()
     {
         m_Controller = this.GetComponent<CharacterController>();
@@ -48,9 +49,15 @@ public class PlayerMovement : MonoBehaviourPun
         m_Camera.SetActive(photonView.IsMine);
     }
 
+    public void SetDead(bool isDead)
+    {
+        m_Dead = isDead;
+        m_Animator.SetBool("Dead",m_Dead);
+    }
+    
     void Update()
     {
-        if (photonView.IsMine)
+        if (photonView.IsMine && !m_Dead)
         {
             UpdatePosition();
             UpdateRotation();
