@@ -32,18 +32,21 @@ public class PlayerMovement : MonoBehaviourPun
     public float jumpHeight = 2f;
 
     //定义鼠标移动速度
+
+    public Transform spineRoot;
     public Transform gunRoot;
     public float mouseSpeed = 100f;
     float yRotation = 0f;
 
     private bool m_Dead;
-    
+    private static readonly int Dead = Animator.StringToHash("Dead");
+
     void Awake()
     {
         m_Controller = this.GetComponent<CharacterController>();
         m_Animator = this.GetComponent<Animator>();
         m_Helmet = transform.Find("Helmet").gameObject;
-        m_Camera = transform.Find("GunRoot/Camera").gameObject;
+        m_Camera = gunRoot.Find("Camera").gameObject;
         
         m_Helmet.SetActive(!photonView.IsMine);
         m_Camera.SetActive(photonView.IsMine);
@@ -52,7 +55,19 @@ public class PlayerMovement : MonoBehaviourPun
     public void SetDead(bool isDead)
     {
         m_Dead = isDead;
-        m_Animator.SetBool("Dead",m_Dead);
+        // if (isDead)
+        // {
+        //     gunRoot.SetParent(spineRoot,false);
+        //     gunRoot.localPosition = Vector3.zero;
+        //     gunRoot.localRotation = Quaternion.identity;
+        // }
+        // else
+        // {
+        //     gunRoot.SetParent(transform,false);
+        //     gunRoot.localPosition = new Vector3(0, 1.758f, 0.2f);
+        //     gunRoot.localRotation = Quaternion.identity;
+        // }
+        m_Animator.SetBool(Dead,m_Dead);
     }
     
     void Update()

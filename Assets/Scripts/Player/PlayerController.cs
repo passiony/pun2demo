@@ -1,26 +1,39 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using Photon.Pun;
+using Photon.Pun.Demo.PunBasics;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 {
-    public GameObject HealthUIPrefab;
     public int MaxHP => 100;
+    public GameObject HealthUIPrefab;
+    public static PlayerController LocalPlayer;
+    
     private int m_Hp;
-    public int HP => m_Hp;
-
-    private BaseGun m_CurrentBaseGun;
-    public BaseGun CurrentBaseGun => m_CurrentBaseGun;
+    private int m_Score;
     private bool IsFiring;
     private bool IsDead;
-
     private EGunType m_GunType;
+
+    private PlayerMovement movement;
+    private BaseGun m_CurrentBaseGun;
+    public BaseGun CurrentBaseGun => m_CurrentBaseGun;
+    public int HP => m_Hp;
+
     private Dictionary<EGunType, BaseGun> gunDic;
 
     void Awake()
     {
+        // used in GameManager.cs: we keep track of the localPlayer instance to prevent instanciation when levels are synchronized
+        if (photonView.IsMine)
+        {
+            LocalPlayer = this;
+        }
+        
         m_Hp = MaxHP;
+        movement = this.GetComponent<PlayerMovement>();
         InitGun();
         LoadGun(EGunType.AK47);
     }
@@ -35,7 +48,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
             gunDic.Add(gun.GunType, gun);
         }
     }
-    
+
     public void LoadGun(EGunType gunType)
     {
         m_GunType = gunType;
@@ -53,6 +66,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
         if (photonView.IsMine)
         {
             GameUI.Instance.SetTarget(this);
+            AddScore();
         }
         else
         {
@@ -81,25 +95,37 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
         CurrentBaseGun.AddBullet(30);
     }
 
-    private void OnControllerColliderHit(ControllerColliderHit hit)
+    public void AddScore(int add = 0)
     {
-        if (hit.collider.CompareTag("Supply"))
+        m_Score += add;
+        MyGameManager.Instance.SetScore(photonView.Owner.NickName, m_Score);
+    }
+
+    public void SetPosition(Transform point)
+    {
+        transform.position = point.position;
+        transform.rotation = point.rotation;
+    }
+    private void OnTriggerEnter(Collider other)
+    {
+        Debug.Log("player.OnTriggerEnter:" + other.name);
+        if (other.CompareTag("Supply"))
         {
-            var supply = hit.collider.GetComponent<ISupply>();
+            var supply = other.GetComponent<ISupply>();
             supply.Supply(this);
         }
     }
 
-    public void OnDamage()
+    public bool OnDamage()
     {
-        if (photonView.IsMine)
+        if (!photonView.IsMine)
         {
-            return;
+            return false;
         }
 
         if (IsDead)
         {
-            return;
+            return false;
         }
 
         Debug.Log("hp:" + m_Hp);
@@ -107,27 +133,40 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
         if (m_Hp <= 0)
         {
             IsDead = true;
-            this.GetComponent<PlayerMovement>().SetDead(true);
+            Reboarn();
+            return true;
         }
+
+        return false;
     }
 
+    private void Reboarn()
+    {
+        Debug.Log("重生");
+        m_Hp = MaxHP;
+        IsDead = false;
+        this.movement.SetDead(false);
+        MyGameManager.Instance.Reboarn(this);
+    }
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
         if (stream.IsWriting)
         {
             // We own this player: send the others our data
             stream.SendNext(this.m_Hp);
+            stream.SendNext(this.m_Score);
             stream.SendNext(this.IsDead);
             stream.SendNext(this.IsFiring);
-            stream.SendNext(m_GunType);
+            stream.SendNext((int)m_GunType);
         }
         else
         {
             // Network player, receive data
             this.m_Hp = (int)stream.ReceiveNext();
+            this.m_Score = (int)stream.ReceiveNext();
             this.IsDead = (bool)stream.ReceiveNext();
             this.IsFiring = (bool)stream.ReceiveNext();
-            var gunType = (EGunType)stream.ReceiveNext();
+            var gunType = (EGunType)(int)stream.ReceiveNext();
 
             if (gunType != m_GunType)
             {

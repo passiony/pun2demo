@@ -43,7 +43,11 @@ public class RifleGun : BaseGun
                 var player = hit.collider.GetComponent<PlayerController>();
                 if (player != target)
                 {
-                    player.OnDamage();
+                    var killed= player.OnDamage();
+                    if (killed)
+                    {
+                        target.AddScore(1);
+                    }
                 }
             }
             else

@@ -15,9 +15,9 @@ public class BulletSupply : MonoBehaviourPunCallbacks, ISupply
 
     public void Supply(PlayerController _target)
     {
+        _target.AddBullet();
         if (PhotonNetwork.IsMasterClient)
         {
-            _target.AddBullet();
             PhotonNetwork.Destroy(gameObject);
         }
     }
