@@ -10,30 +10,32 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
     private int m_Hp;
     public int HP => m_Hp;
 
-    public IGun m_CurrentGun;
-    public IGun CurrentGun => m_CurrentGun;
+    private BaseGun m_CurrentBaseGun;
+    public BaseGun CurrentBaseGun => m_CurrentBaseGun;
     private bool IsFiring;
     private bool IsDead;
 
     private EGunType m_GunType;
-    private Dictionary<EGunType, IGun> gunDic;
+    private Dictionary<EGunType, BaseGun> gunDic;
 
     void Awake()
     {
-        var guns = transform.GetComponentsInChildren<IGun>();
-        m_GunType = EGunType.Rifle;
-        m_CurrentGun = guns[(int)m_GunType];
-
-        m_CurrentGun.SetTarget(this);
         m_Hp = MaxHP;
+        InitGun();
+        LoadGun(EGunType.AK47);
+    }
 
-        gunDic = new Dictionary<EGunType, IGun>();
+    void InitGun()
+    {
+        var guns = transform.GetComponentsInChildren<BaseGun>(true);
+        gunDic = new Dictionary<EGunType, BaseGun>();
         foreach (var gun in guns)
         {
+            gun.SetTarget(this);
             gunDic.Add(gun.GunType, gun);
         }
     }
-
+    
     public void LoadGun(EGunType gunType)
     {
         m_GunType = gunType;
@@ -41,7 +43,9 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
         {
             gun.Value.gameObject.SetActive(false);
         }
-        gunDic[gunType].Load();
+
+        m_CurrentBaseGun = gunDic[gunType];
+        m_CurrentBaseGun.Load();
     }
 
     private void Start()
@@ -69,12 +73,12 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
             }
         }
 
-        m_CurrentGun.SetFire(IsFiring);
+        m_CurrentBaseGun.SetFire(IsFiring);
     }
 
     public void AddBullet()
     {
-        CurrentGun.AddBullet(30);
+        CurrentBaseGun.AddBullet(30);
     }
 
     private void OnControllerColliderHit(ControllerColliderHit hit)

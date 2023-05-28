@@ -924,7 +924,7 @@ MonoBehaviour:
   playerPrefab: {fileID: 706416970935033905, guid: 9ebb80df55190e545b44ce4484ce1de0, type: 3}
   gunPrefab: {fileID: 1890079283244236, guid: 01643c2842adbd84c958b95853920c07, type: 3}
   bulletPrefab: {fileID: 1232322618620288, guid: 41abb29fabf7a0d44ba6ca922ebf33e3, type: 3}
-  Interval: 20
+  Interval: 10
 --- !u!224 &588381339 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 22478194, guid: b19bb80838bcf4457bf6f50a19c5593b, type: 3}

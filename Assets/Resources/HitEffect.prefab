@@ -22,7 +22,7 @@ GameObject:
   - component: {fileID: 33628066557270460}
   - component: {fileID: 23199312883093090}
   m_Layer: 0
-  m_Name: SniperBulletDecalGeneric
+  m_Name: HitEffect
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

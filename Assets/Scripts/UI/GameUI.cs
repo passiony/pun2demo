@@ -35,7 +35,7 @@ public class GameUI : MonoBehaviour
 
             if (slotItem != null)
             {
-                slotItem.SetCount(target.CurrentGun.BulletCount);
+                slotItem.SetCount(target.CurrentBaseGun.BulletCount);
             }
         }
     }

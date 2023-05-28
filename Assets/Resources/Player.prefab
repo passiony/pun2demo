@@ -325,7 +325,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HealthUIPrefab: {fileID: 170056, guid: 233f32b06db8f9b49a11cd0f61f17c21, type: 3}
-  m_CurrentGun: {fileID: 0}
 --- !u!1 &706416970935033907
 GameObject:
   m_ObjectHideFlags: 0
@@ -3113,7 +3112,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8258725245265606102}
-  - component: {fileID: 9187806063797322346}
   - component: {fileID: 3083460955506612399}
   - component: {fileID: 6527484173199262113}
   m_Layer: 29
@@ -3146,27 +3144,6 @@ Transform:
   m_Father: {fileID: 4050657575032247450}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: -4.508, y: -5.011, z: 3.57}
---- !u!95 &9187806063797322346
-Animator:
-  serializedVersion: 5
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3427835095684858712}
-  m_Enabled: 1
-  m_Avatar: {fileID: 9000000, guid: 9043c1894b9c72b4684d63d3fd679c18, type: 3}
-  m_Controller: {fileID: 9100000, guid: e7b6d646345c63a449934edf4c8daaad, type: 2}
-  m_CullingMode: 1
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!82 &3083460955506612399
 AudioSource:
   m_ObjectHideFlags: 0
@@ -3275,12 +3252,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1d520ac20a11a343bc28538466c1246, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BulletCount: 30
-  m_GunType: 0
-  leftHandle: {fileID: 3989408174104671340}
-  rightHandle: {fileID: 7460463782884089051}
-  hitEffect: {fileID: 1805676039915944, guid: a90ba28f11d075c4883dbe6287c542f5, type: 3}
-  FireInterval: 0.2
+  m_GunType: 1
+  m_BulletCount: 30
+  m_FireInterval: 0.2
+  m_MuzzleFlash: {fileID: 8676777375450460410}
+  m_HitEffect: {fileID: 1805676039915944, guid: a90ba28f11d075c4883dbe6287c542f5, type: 3}
+  m_LeftHandle: {fileID: 3989408174104671340}
+  m_RightHandle: {fileID: 7460463782884089051}
+  m_FireSound: {fileID: 8300000, guid: 7921ad83e48af1249bc60d7c347fd453, type: 3}
+  m_DryFireSound: {fileID: 8300000, guid: f471345df25028c48b7b2e0d9ad502d0, type: 3}
 --- !u!1 &4067631729144937154
 GameObject:
   m_ObjectHideFlags: 0
@@ -3292,8 +3272,8 @@ GameObject:
   - component: {fileID: 4062251258977785974}
   - component: {fileID: 4037417766835663300}
   - component: {fileID: 4045862700611828380}
-  - component: {fileID: 4172187316098212772}
   - component: {fileID: 4175186138253442310}
+  - component: {fileID: 3055520988086644497}
   m_Layer: 28
   m_Name: MuzzleFlash
   m_TagString: Untagged
@@ -3366,22 +3346,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &4172187316098212772
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4067631729144937154}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 533c81f655f906f46b89d75f31829bcd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_TintColorPropertyName: _TintColor
-  m_StartAlpha: 0.5
-  m_MinFadeSpeed: 3
-  m_MaxFadeSpeed: 4
 --- !u!108 &4175186138253442310
 Light:
   m_ObjectHideFlags: 0
@@ -3444,6 +3408,22 @@ Light:
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
+--- !u!114 &3055520988086644497
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4067631729144937154}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6e97d1af6c2d7a4ebc571f86965bd87, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_TintColorPropertyName: _TintColor
+  m_StartAlpha: 0.5
+  m_MinFadeSpeed: 3
+  m_MaxFadeSpeed: 4
 --- !u!1 &4634100821425925039
 GameObject:
   m_ObjectHideFlags: 0
@@ -3974,8 +3954,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7953777937849029560}
-  - component: {fileID: 6934297402278960895}
   - component: {fileID: 127489463864972687}
+  - component: {fileID: 6934297402278960895}
   m_Layer: 28
   m_Name: RifleGun
   m_TagString: Untagged
@@ -4008,24 +3988,6 @@ Transform:
   m_Father: {fileID: 4050657575032247450}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: -5.392, y: -5.163, z: 0.062}
---- !u!114 &6934297402278960895
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7955937245988461408}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cf23f7c0df5020e4582a6aa9784b2b80, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  BulletCount: 30
-  m_GunType: 0
-  leftHandle: {fileID: 0}
-  rightHandle: {fileID: 0}
-  hitEffect: {fileID: 1805676039915944, guid: a90ba28f11d075c4883dbe6287c542f5, type: 3}
-  FireInterval: 0.1
 --- !u!82 &127489463864972687
 AudioSource:
   m_ObjectHideFlags: 0
@@ -4122,6 +4084,27 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &6934297402278960895
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7955937245988461408}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf23f7c0df5020e4582a6aa9784b2b80, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_GunType: 0
+  m_BulletCount: 30
+  m_FireInterval: 0.2
+  m_MuzzleFlash: {fileID: 3055520988086644497}
+  m_HitEffect: {fileID: 1805676039915944, guid: a90ba28f11d075c4883dbe6287c542f5, type: 3}
+  m_LeftHandle: {fileID: 706416972235915598}
+  m_RightHandle: {fileID: 706416972630435245}
+  m_FireSound: {fileID: 8300000, guid: 4cfb3711043343547aba3fd88637865b, type: 3}
+  m_DryFireSound: {fileID: 8300000, guid: 7bfcb17897f4ce345bb38432d197eaed, type: 3}
 --- !u!1 &7955974255370622136
 GameObject:
   m_ObjectHideFlags: 0

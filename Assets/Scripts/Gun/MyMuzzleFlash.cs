@@ -4,18 +4,9 @@
 /// https://www.opsive.com
 /// ---------------------------------------------
 
-using Opsive.Shared.Events;
-using Opsive.Shared.Game;
-using Opsive.UltimateCharacterController.Character;
-using Opsive.UltimateCharacterController.Game;
-using Opsive.UltimateCharacterController.Items;
-using Opsive.UltimateCharacterController.Items.Actions.PerspectiveProperties;
 using UnityEngine;
 
-/// <summary>
-/// Shows an object which slowly fades out with time. Can optionally attach a light to the GameObject and that light will be faded as well.
-/// </summary>
-public class MuzzleFlash : MonoBehaviour
+public class MyMuzzleFlash : MonoBehaviour
 {
     [Tooltip("The name of the shader tint color property.")] [SerializeField]
     protected string m_TintColorPropertyName = "_TintColor";

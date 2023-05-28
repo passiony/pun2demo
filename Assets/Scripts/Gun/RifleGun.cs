@@ -1,21 +1,14 @@
-using System;
-using Photon.Pun.Demo.Asteroids;
 using UnityEngine;
 
-public class RifleGun : IGun
+public class RifleGun : BaseGun
 {
-    public GameObject hitEffect;
-    public float FireInterval = 0.2f;
     private float invokeTime;
-    private Transform firePoint;
-    private MuzzleFlash muzzleFlash;
     private Transform root;
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         root = transform.parent;
-        firePoint = transform.Find("FirePoint");
-        muzzleFlash = transform.Find("FirePoint/MuzzleFlash").GetComponent<MuzzleFlash>();
     }
 
     void Update()
@@ -23,28 +16,24 @@ public class RifleGun : IGun
         invokeTime += Time.deltaTime;
         if (m_Fire)
         {
-            if (invokeTime - FireInterval > 0)
+            if (invokeTime - m_FireInterval > 0)
             {
                 if (BulletCount > 0)
                 {
                     Fire();
                 }
-
+                else
+                {
+                    DryFire();
+                }
                 invokeTime = 0;
             }
         }
     }
 
-    public override void Load()
+    protected override void Fire()
     {
-        
-    }
-
-    void Fire()
-    {
-        BulletCount--;
-        muzzleFlash.Show();
-
+        base.Fire();
         RaycastHit hit;
         // Debug.DrawLine(root.position, root.position + root.forward * 100, Color.red);
         if (Physics.Raycast(root.position, root.forward, out hit))
@@ -59,7 +48,7 @@ public class RifleGun : IGun
             }
             else
             {
-                var effect = GameObject.Instantiate(hitEffect);
+                var effect = GameObject.Instantiate(m_HitEffect);
                 effect.transform.position = hit.point;
                 effect.transform.forward = hit.normal;
                 Destroy(effect, 1);
