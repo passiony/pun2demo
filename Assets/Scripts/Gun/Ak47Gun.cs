@@ -1,3 +1,4 @@
+using Photon.Pun;
 using UnityEngine;
 
 public class Ak47Gun : BaseGun
@@ -26,6 +27,7 @@ public class Ak47Gun : BaseGun
                 {
                     DryFire();
                 }
+
                 invokeTime = 0;
             }
         }
@@ -43,8 +45,8 @@ public class Ak47Gun : BaseGun
                 var player = hit.collider.GetComponent<PlayerController>();
                 if (player != target)
                 {
-                    var killed= player.OnDamage();
-                    if (killed)
+                    player.OnDamage();
+                    if (player.HP <= 0)
                     {
                         target.AddScore(1);
                     }

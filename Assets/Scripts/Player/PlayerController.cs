@@ -118,15 +118,42 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 
     public bool OnDamage()
     {
-        if (!photonView.IsMine)
+        if (photonView.IsMine)
         {
-            return false;
+            photonView.RPC("DamageHP",RpcTarget.All);
         }
+        return false;
+    }
+    
+    // public bool OnDamage()
+    // {
+    //     if (!photonView.IsMine)
+    //     {
+    //         return false;
+    //     }
+    //
+    //     if (IsDead)
+    //     {
+    //         return false;
+    //     }
+    //
+    //     Debug.Log("hp:" + m_Hp);
+    //     this.m_Hp -= 10;
+    //     if (m_Hp <= 0)
+    //     {
+    //         IsDead = true;
+    //         Reboarn();
+    //         return true;
+    //     }
+    //
+    //     return false;
+    // }
 
+    [PunRPC]
+    void DamageHP()
+    {
         if (IsDead)
-        {
-            return false;
-        }
+            return;
 
         Debug.Log("hp:" + m_Hp);
         this.m_Hp -= 10;
@@ -134,12 +161,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
         {
             IsDead = true;
             Reboarn();
-            return true;
         }
-
-        return false;
     }
-
     private void Reboarn()
     {
         Debug.Log("重生");
