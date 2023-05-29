@@ -158,6 +158,7 @@ MonoBehaviour:
   - {fileID: 265988704242775150}
   - {fileID: 6863805739539681756}
   m_GunType: 0
+  m_Duration: 20
 --- !u!114 &-2916653411824434804
 MonoBehaviour:
   m_ObjectHideFlags: 0

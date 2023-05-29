@@ -4,9 +4,11 @@ using UnityEngine;
 
 public class BulletSupply : MonoBehaviourPunCallbacks, ISupply
 {
+    public float m_Duration=20;
+
     IEnumerator Start()
     {
-        yield return new WaitForSeconds(10);
+        yield return new WaitForSeconds(m_Duration);
         if (PhotonNetwork.IsMasterClient)
         {
             PhotonNetwork.Destroy(gameObject);

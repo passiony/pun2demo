@@ -229,7 +229,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
         IsDead = false;
         LoadGunSupply(EGunType.Rifle);
 
-        var born = MyGameManager.Instance.GetBornPoint(this);
+        var born = MyGameManager.Instance.GetRandomBornPoint();
         this.m_Movement.Reborn(born.position);
     }
 

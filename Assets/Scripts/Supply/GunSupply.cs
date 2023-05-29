@@ -8,6 +8,7 @@ public class GunSupply : MonoBehaviourPunCallbacks, ISupply
 {
     public GameObject[] m_Guns;
     public EGunType m_GunType;
+    public float m_Duration = 20;
 
     IEnumerator Start()
     {
@@ -15,7 +16,7 @@ public class GunSupply : MonoBehaviourPunCallbacks, ISupply
         m_GunType = (EGunType)random;
         m_Guns[random].SetActive(true);
 
-        yield return new WaitForSeconds(10);
+        yield return new WaitForSeconds(m_Duration);
         if (PhotonNetwork.IsMasterClient)
         {
             PhotonNetwork.Destroy(gameObject);

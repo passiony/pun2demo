@@ -38,7 +38,7 @@ namespace Photon.Pun.Demo.PunBasics
 
         private Dictionary<string, int> m_ScoreBoard;
         public Dictionary<string, int> ScoreBoard => m_ScoreBoard;
-        
+
         private bool m_GameOver;
         public bool GameOver => m_GameOver;
 
@@ -66,7 +66,7 @@ namespace Photon.Pun.Demo.PunBasics
             }
             else
             {
-                int index = PhotonNetwork.IsMasterClient ? 0 : 1;
+                int index = Random.Range(0, bornPoints.Length);
                 var born = bornPoints[index];
                 Debug.LogFormat("We are Instantiating LocalPlayer from {0}", SceneManagerHelper.ActiveSceneName);
                 // we're in a room. spawn a character for the local player. it gets synced by using PhotonNetwork.Instantiate
@@ -86,9 +86,9 @@ namespace Photon.Pun.Demo.PunBasics
             }
         }
 
-        public Transform GetBornPoint(PlayerController player)
+        public Transform GetRandomBornPoint()
         {
-            int index = PhotonNetwork.IsMasterClient ? 0 : 1;
+            int index = Random.Range(0, bornPoints.Length);
             var born = bornPoints[index];
 
             return born;
