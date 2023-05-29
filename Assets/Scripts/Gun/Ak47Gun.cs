@@ -45,11 +45,7 @@ public class Ak47Gun : BaseGun
                 var player = hit.collider.GetComponent<PlayerController>();
                 if (player != target)
                 {
-                    player.OnDamage();
-                    if (player.HP <= 0)
-                    {
-                        target.AddScore(1);
-                    }
+                    target.AttachPlayer(player);
                 }
             }
             else
@@ -61,4 +57,5 @@ public class Ak47Gun : BaseGun
             }
         }
     }
+
 }

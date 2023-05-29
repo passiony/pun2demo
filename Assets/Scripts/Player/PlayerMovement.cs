@@ -8,7 +8,7 @@ public class PlayerMovement : MonoBehaviourPun
     private Animator m_Animator;
     private GameObject m_Helmet;
     private GameObject m_Camera;
-
+    
     //这里是人物行走时的速度
     public float walkSpeed = 5f;
 
@@ -47,34 +47,29 @@ public class PlayerMovement : MonoBehaviourPun
         m_Animator = this.GetComponent<Animator>();
         m_Helmet = transform.Find("Helmet").gameObject;
         m_Camera = gunRoot.Find("Camera").gameObject;
-        
+
         m_Helmet.SetActive(!photonView.IsMine);
         m_Camera.SetActive(photonView.IsMine);
     }
 
-    public void SetDead(bool isDead)
+    public void Die()
     {
-        m_Dead = isDead;
-        // if (isDead)
-        // {
-        //     gunRoot.SetParent(spineRoot,false);
-        //     gunRoot.localPosition = Vector3.zero;
-        //     gunRoot.localRotation = Quaternion.identity;
-        // }
-        // else
-        // {
-        //     gunRoot.SetParent(transform,false);
-        //     gunRoot.localPosition = new Vector3(0, 1.758f, 0.2f);
-        //     gunRoot.localRotation = Quaternion.identity;
-        // }
-        m_Animator.SetBool(Dead,m_Dead);
+        m_Dead = true;
+    }
+    public void Reborn(Vector3 rebornPoint)
+    {
+        m_Dead = false;
+        m_Controller.Move(rebornPoint - transform.position);
     }
     
     void Update()
     {
-        if (photonView.IsMine && !m_Dead)
+        if (photonView.IsMine)
         {
-            UpdatePosition();
+            if (!m_Dead)
+            {
+                UpdatePosition();
+            }
             UpdateRotation();
         }
     }
@@ -133,4 +128,5 @@ public class PlayerMovement : MonoBehaviourPun
         gunRoot.localRotation = Quaternion.Euler(yRotation, 0f, 0f);
         transform.Rotate(Vector3.up * mouseX); //绕着y轴旋转
     }
+
 }

@@ -8,8 +8,6 @@
 // <author>developer@exitgames.com</author>
 // --------------------------------------------------------------------------------------------------------------------
 
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -32,13 +30,18 @@ namespace Photon.Pun.Demo.PunBasics
 
         [SerializeField] private GameObject gameUI;
         [SerializeField] private GameObject playerPrefab;
-        [SerializeField] private GameObject gunPrefab;
-        [SerializeField] private GameObject bulletPrefab;
+        [SerializeField] private GameObject[] supplies;
         [SerializeField] private Transform[] bornPoints;
-        private Dictionary<string, int> scoreBoard;
 
-        public Dictionary<string, int> ScoreBoard => scoreBoard;
-        public int Interval = 20;
+        [SerializeField] public int m_Interval = 20;
+        [SerializeField] private int m_WinCount = 10;
+
+        private Dictionary<string, int> m_ScoreBoard;
+        public Dictionary<string, int> ScoreBoard => m_ScoreBoard;
+        
+        private bool m_GameOver;
+        public bool GameOver => m_GameOver;
+
         private float timer;
 
         /// <summary>
@@ -74,22 +77,23 @@ namespace Photon.Pun.Demo.PunBasics
             //创建计分板
             if (PhotonNetwork.IsMasterClient)
             {
-                scoreBoard = new Dictionary<string, int>();
-                PhotonNetwork.CurrentRoom.SetCustomProperties(new Hashtable() { { "ScoreBoard", scoreBoard } });
+                m_ScoreBoard = new Dictionary<string, int>();
+                PhotonNetwork.CurrentRoom.SetCustomProperties(new Hashtable() { { "ScoreBoard", m_ScoreBoard } });
             }
             else //房主创建，非房主获取
             {
-                scoreBoard = (Dictionary<string, int>)PhotonNetwork.CurrentRoom.CustomProperties["ScoreBoard"];
+                m_ScoreBoard = (Dictionary<string, int>)PhotonNetwork.CurrentRoom.CustomProperties["ScoreBoard"];
             }
         }
 
-        public void Reboarn(PlayerController player)
+        public Transform GetBornPoint(PlayerController player)
         {
             int index = PhotonNetwork.IsMasterClient ? 0 : 1;
             var born = bornPoints[index];
 
-            player.SetPosition(born);
+            return born;
         }
+
         /// <summary>
         /// MonoBehaviour method called on GameObject by Unity on every frame.
         /// </summary>
@@ -104,7 +108,7 @@ namespace Photon.Pun.Demo.PunBasics
             if (PhotonNetwork.IsMasterClient)
             {
                 timer += Time.deltaTime;
-                if (timer > Interval)
+                if (timer > m_Interval)
                 {
                     timer = 0;
                     LoadSupplies();
@@ -148,7 +152,9 @@ namespace Photon.Pun.Demo.PunBasics
         {
             if (propertiesThatChanged.ContainsKey("ScoreBoard"))
             {
-                scoreBoard = (Dictionary<string, int>)propertiesThatChanged["ScoreBoard"];
+                m_ScoreBoard = (Dictionary<string, int>)propertiesThatChanged["ScoreBoard"];
+
+                CheckGameOver();
             }
         }
 
@@ -160,18 +166,18 @@ namespace Photon.Pun.Demo.PunBasics
             SceneManager.LoadScene("Launcher");
         }
 
-        public void SetScore(string name, int score)
+        public void AddScore(string name, int score)
         {
-            if (!scoreBoard.ContainsKey(name))
+            if (!m_ScoreBoard.ContainsKey(name))
             {
-                scoreBoard.Add(name, score);
+                m_ScoreBoard.Add(name, score);
             }
             else
             {
-                scoreBoard[name] = score;
+                m_ScoreBoard[name] += score;
             }
 
-            PhotonNetwork.CurrentRoom.SetCustomProperties(new Hashtable() { { "ScoreBoard", scoreBoard } });
+            PhotonNetwork.CurrentRoom.SetCustomProperties(new Hashtable() { { "ScoreBoard", m_ScoreBoard } });
         }
 
         public bool LeaveRoom()
@@ -199,9 +205,30 @@ namespace Photon.Pun.Demo.PunBasics
 
         void LoadSupplies()
         {
-            Vector3 point = new Vector3(Random.Range(-10, 10), 10, Random.Range(-10, 10));
-            PhotonNetwork.InstantiateRoomObject(gunPrefab.name, point, Quaternion.identity);
+            int randon = Random.Range(0, 2);
+            var prefab = supplies[randon];
+
+            Vector3 point = new Vector3(Random.Range(-15, 15), 10, Random.Range(-20, 20));
+            PhotonNetwork.InstantiateRoomObject(prefab.name, point, Quaternion.identity);
         }
-        
+
+        void CheckGameOver()
+        {
+            foreach (var player in m_ScoreBoard)
+            {
+                if (player.Value >= m_WinCount)
+                {
+                    m_GameOver = true;
+                    if (PlayerController.LocalPlayer.photonView.Owner.NickName == player.Key)
+                    {
+                        GameUI.Instance.ShowWinPanel();
+                    }
+                    else
+                    {
+                        GameUI.Instance.ShowLosePanel();
+                    }
+                }
+            }
+        }
     }
 }

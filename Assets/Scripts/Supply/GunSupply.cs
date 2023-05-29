@@ -22,14 +22,10 @@ public class GunSupply : MonoBehaviourPunCallbacks, ISupply
         }
     }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        Debug.Log("OnTrigger:" + other.name);
-    }
 
     public void Supply(PlayerController _target)
     {
-        _target.LoadGun(m_GunType);
+        _target.LoadGunSupply(m_GunType);
         if (PhotonNetwork.IsMasterClient)
         {
             PhotonNetwork.Destroy(gameObject);

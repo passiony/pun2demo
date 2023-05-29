@@ -50,9 +50,8 @@ public class BaseGun : MonoBehaviour
     {
         this.gameObject.SetActive(true);
         m_BulletCount = 30;
-        var ik = target.GetComponent<IKControl>();
-        ik.leftHandObj = m_LeftHandle;
-        ik.rightHandObj = m_RightHandle;
+
+        target.InitIK(m_LeftHandle, m_RightHandle);
     }
 
     protected virtual void Fire()
