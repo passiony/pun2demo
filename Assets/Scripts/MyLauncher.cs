@@ -30,6 +30,7 @@ namespace Photon.Pun.Demo.PunBasics
         [Tooltip("The UI Loader Anime")] [SerializeField]
         private LoaderAnime loaderAnime;
 
+        private string address = "127.0.0.1";
         bool isConnecting;
         string gameVersion = "1";
 
@@ -45,8 +46,9 @@ namespace Photon.Pun.Demo.PunBasics
             PhotonNetwork.AutomaticallySyncScene = true;
 
             controlPanel.transform.Find("Connect Button").GetComponent<Button>().onClick.AddListener(Connect);
+            address = controlPanel.transform.Find("IP InputField").GetComponent<InputField>().text;
         }
-        
+
         public void Connect()
         {
             // we want to make sure the log is clear everytime we connect, we might have several failed attempted if connection failed.
@@ -76,7 +78,9 @@ namespace Photon.Pun.Demo.PunBasics
                 LogFeedback("Connecting...");
 
                 // #Critical, we must first and foremost connect to Photon Online Server.
-                PhotonNetwork.ConnectUsingSettings();
+                // PhotonNetwork.ConnectUsingSettings();
+                PhotonNetwork.ConnectToMaster(address, PhotonNetwork.PhotonServerSettings.AppSettings.Port,
+                    PhotonNetwork.PhotonServerSettings.AppSettings.AppIdRealtime);
                 PhotonNetwork.GameVersion = this.gameVersion;
             }
         }

@@ -20,7 +20,7 @@ MonoBehaviour:
     AppVersion: 
     UseNameServer: 0
     FixedRegion: cn
-    Server: 192.168.3.29
+    Server: 127.0.0.1
     Port: 4530
     ProxyServer: NameServer
     Protocol: 1
@@ -39,6 +39,11 @@ MonoBehaviour:
   - DestroySpaceship
   - Fire
   - RespawnSpaceship
+  - DamageHP
+  - OnDamege
+  - OnKillPlayer
+  - OnDead
+  - Reboarn
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1
