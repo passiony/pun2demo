@@ -129,7 +129,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
             return;
         }
 
-        Debug.Log($"击杀成功,+{add}分");
+        Debug.Log($"设置分数{add}分");
         MyGameManager.Instance.AddScore(photonView.Owner.NickName, add);
     }
 
