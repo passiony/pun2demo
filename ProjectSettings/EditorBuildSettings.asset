@@ -11,5 +11,14 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Game.unity
     guid: 056a3735d973e234d8c31fa572bdae08
+  - enabled: 1
+    path: Assets/Photon/PhotonUnityNetworking/Demos/DemoAsteroids/Scenes/DemoAsteroids-GameScene.unity
+    guid: 98efc37d6307844488eb3e4247dde7e9
+  - enabled: 1
+    path: Assets/Photon/PhotonUnityNetworking/Demos/DemoAsteroids/Scenes/DemoAsteroids-LobbyScene.unity
+    guid: c8a9d1312a49dc8488a9b32d83d659c7
   m_configObjects:
+    Unity.XR.Oculus.Settings: {fileID: 11400000, guid: 96f1d00250dad4a46b88e117024cab3e, type: 2}
     com.unity.input.settings: {fileID: 11400000, guid: 41c58e8d77a52fa4fb7d98068842438b, type: 2}
+    com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 3dda0f3c51707ad4ba6f4c351d2c15db, type: 2}
+    com.unity.xr.openxr.settings4: {fileID: 11400000, guid: 6645c29f503964546ad0de583938930f, type: 2}
