@@ -94,17 +94,18 @@ namespace Photon.Pun.Demo.PunBasics
             return born;
         }
 
+        // "back" button of phone equals "Escape". quit app if that's pressed
+        // if (Input.GetKeyDown(KeyCode.Escape))
+        // {
+        // 	QuitApplication();
+        // }
+
+        
         /// <summary>
         /// MonoBehaviour method called on GameObject by Unity on every frame.
         /// </summary>
         void Update()
         {
-            // "back" button of phone equals "Escape". quit app if that's pressed
-            // if (Input.GetKeyDown(KeyCode.Escape))
-            // {
-            // 	QuitApplication();
-            // }
-
             if (PhotonNetwork.IsMasterClient)
             {
                 timer += Time.deltaTime;
