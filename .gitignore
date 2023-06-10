@@ -30,6 +30,8 @@ Logs/
 *.pdb
 *.opendb
 *.lua.bytes
+*.zip
+*.7z
 
 # Unity3D generated meta files
 *.pidb.meta
