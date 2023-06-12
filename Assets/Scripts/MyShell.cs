@@ -18,14 +18,11 @@ using Random = UnityEngine.Random;
 public class MyShell : MonoBehaviour
 {
     [Tooltip("Time to live in seconds before the shell is removed.")] [SerializeField]
-    protected float m_Lifespan = 10;
+    protected float m_Lifespan = 5;
 
     [Tooltip("Chance of shell not being removed after settling on the ground.")] [Range(0, 1)] [SerializeField]
     protected float m_Persistence = 1;
 
-    [SerializeField]
-    protected AudioClip[] m_ShellClips;
-    
     private float m_RemoveTime;
     private Vector3 m_StartScale;
 

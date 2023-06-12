@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using Opsive.Shared.Audio;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -6,35 +8,49 @@ public class SurfaceMamager : MonoBehaviour
     public static SurfaceMamager Instance;
     public bool m_Multe;
 
-    [Header("Decal")] public float m_DecalLifetime = 5f;
+    [Header("Decal")] 
+    public float m_DecalLifetime = 5f;
     public GameObject[] m_DecalPrefabs;
-    public AudioClip[] m_DecalClips;
+    public AudioClipSet[] m_DecalClips;
 
-    [Header("Shell")] public AudioClip[] m_ShellClips;
-    // private AudioSource m_AudioSouce;
+    [Header("Shell")] 
+    public AudioClipSet[] m_ShellClips;
 
+    private Dictionary<string, AudioClipSet> m_DecalClipDic;
+    private Dictionary<string, AudioClipSet> m_ShellClipDic;
+    
     private void Awake()
     {
         Instance = this;
         // m_AudioSouce = gameObject.GetComponent<AudioSource>();
+        m_DecalClipDic = new Dictionary<string, AudioClipSet>();
+        m_ShellClipDic = new Dictionary<string, AudioClipSet>();
+        foreach (var set in m_DecalClips)
+        {
+            m_DecalClipDic.Add(set.Name,set);
+        }
+        foreach (var set in m_ShellClips)
+        {
+            m_ShellClipDic.Add(set.Name,set);
+        }
     }
 
     public void ShowDecal(RaycastHit hit)
     {
         var decal = m_DecalPrefabs[Random.Range(0, m_DecalPrefabs.Length)];
-        PlayAudio(hit);
+        PlayDecalAudio(hit);
         SpawnDecal(decal, hit);
     }
 
-    public void PlayAudio(RaycastHit hit)
+    public void PlayDecalAudio(RaycastHit hit)
     {
         // Play the clip.
         var volume = Random.Range(0.1f, 0.3f);
         // var pitch = Random.Range(-1, 1) * Time.timeScale;
-        var audioClip = m_DecalClips[Random.Range(0, m_DecalClips.Length)];
+        var audioSet = m_DecalClips[Random.Range(0, m_DecalClips.Length)];
         if (!m_Multe)
         {
-            AudioSource.PlayClipAtPoint(audioClip, hit.point, volume);
+            audioSet.PlayAudioClip(hit.point, -1, volume);
         }
     }
 
@@ -64,8 +80,8 @@ public class SurfaceMamager : MonoBehaviour
 
     public void ShowShell(Vector3 point)
     {
-        var clip = m_ShellClips[Random.Range(0, m_ShellClips.Length)];
+        var audioSet = m_ShellClips[Random.Range(0, m_ShellClips.Length)];
         var volume = Random.Range(0.5f, 1f);
-        AudioSource.PlayClipAtPoint(clip, point, volume);
+        audioSet.PlayAudioClip(point, -1, volume);
     }
 }

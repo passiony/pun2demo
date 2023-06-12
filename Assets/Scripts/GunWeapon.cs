@@ -1,13 +1,24 @@
+using System;
 using UnityEngine;
+
+public enum EGunID
+{
+    Pistol,
+    AssaultRifle,
+    SniperRifle,
+    Shotgun,
+}
 
 /// <summary>
 /// 武器类
 /// </summary>
 public class GunWeapon : MonoBehaviour
 {
-    public Transform m_CharacterTransform;
+    [SerializeField] protected EGunID m_ID;
 
-    public Transform FirePointLocation;
+    protected Transform m_CharacterTransform;
+
+    [SerializeField] protected Transform FirePointLocation;
 
     [Tooltip("The amount of time that must elapse before the item can be used again.")] [SerializeField]
     protected float m_FireRate = 0.1f;
@@ -40,7 +51,7 @@ public class GunWeapon : MonoBehaviour
     protected int m_MaxHitscanCollisionCount = 15;
 
     [Tooltip("A LayerMask of the layers that can be hit when fired at.")] [SerializeField]
-    protected LayerMask m_ImpactLayers;
+    protected LayerMask m_ImpactLayers = 1;
 
     [Tooltip("Specifies if the hitscan can detect triggers.")] [SerializeField]
     protected QueryTriggerInteraction m_HitscanTriggerInteraction = QueryTriggerInteraction.Ignore;
@@ -83,19 +94,18 @@ public class GunWeapon : MonoBehaviour
     private RaycastHitComparer m_RaycastHitComparer = new RaycastHitComparer();
 
     public int ClipRemaining => m_ClipRemaining;
+    public EGunID ID => m_ID;
 
-    void Start()
+    private void Awake()
     {
         m_HitscanRaycastHits = new RaycastHit[m_MaxHitscanCollisionCount];
         m_FireAudio.Init(GetComponent<AudioSource>());
-        m_ImpactLayers = ~(1 << LayerMask.NameToLayer("IgnoreRaycast") | 1 << LayerMask.NameToLayer("TransparentFX") |
-                           1 << LayerMask.NameToLayer("UI") | 1 << LayerMask.NameToLayer("Overlay"));
-
-        Equip();
     }
-
-    public void Equip()
+    
+    public void Equip(Transform character)
     {
+        gameObject.SetActive(true);
+        m_CharacterTransform = character;
         m_ClipRemaining = m_ClipSize;
         m_FireAudio.PlayEquipFire();
     }
