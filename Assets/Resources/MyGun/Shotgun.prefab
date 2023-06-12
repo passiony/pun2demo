@@ -11,13 +11,14 @@ GameObject:
   - component: {fileID: 6441949189086533238}
   - component: {fileID: 6087495180285698506}
   - component: {fileID: 8857901375198483091}
+  - component: {fileID: 283146974}
   m_Layer: 29
-  m_Name: ShotGun
+  m_Name: Shotgun
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &6441949189086533238
 Transform:
   m_ObjectHideFlags: 0
@@ -156,6 +157,56 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 0
+--- !u!114 &283146974
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 317672725460869368}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3424d68ba7a6fdf48bc0745e2dbc5c34, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ID: 3
+  FirePointLocation: {fileID: 8518157035941728417}
+  m_FireRate: 1
+  m_FireCount: 6
+  m_Spread: 120
+  m_FireAudio:
+    m_FireAudioClip: {fileID: 8300000, guid: 3a56020179ee7db48981f1671d5f7803, type: 3}
+    m_DryFireAudioClip: {fileID: 8300000, guid: 1a95f0b3ef351284fb53edf03d43bc26, type: 3}
+    m_EquipAudioClip: {fileID: 8300000, guid: 061da79d6cb6acf40a02221e572154b2, type: 3}
+    m_UnequipAudioClip: {fileID: 8300000, guid: f23a191672fda7140a0c957b04a1ce6a, type: 3}
+    m_ReloadAudioClip: {fileID: 8300000, guid: 9282fb50e23883b42b07b37dde3d45a8, type: 3}
+  m_DamageAmount: 30
+  m_ImpactForce: 2
+  m_ImpactForceFrames: 15
+  m_ClipSize: 50
+  m_HitscanFireRange: 100
+  m_MaxHitscanCollisionCount: 15
+  m_ImpactLayers:
+    serializedVersion: 2
+    m_Bits: 1
+  m_HitscanTriggerInteraction: 1
+  m_MuzzleFlash: {fileID: 7590671693157648550}
+  m_Shell: {fileID: 1095859200011794, guid: a078637b5f34f6442b8324068601e134, type: 3}
+  ShellLocation: {fileID: 8016543192621883851}
+  m_ShellVelocity:
+    m_MinValue: {x: 3, y: 0, z: 0}
+    m_MaxValue: {x: 4, y: 2, z: 0}
+    m_MinMagnitude: {x: 0, y: 0, z: 0}
+  m_ShellTorque:
+    m_MinValue: {x: -50, y: -50, z: -50}
+    m_MaxValue: {x: 50, y: 50, z: 50}
+    m_MinMagnitude: {x: 0, y: 0, z: 0}
+  m_ShellEjectDelay: 0
+  m_Smoke: {fileID: 0}
+  SmokeLocation: {fileID: 0}
+  m_SmokeSpawnDelay: 0
+  m_Tracer: {fileID: 0}
+  TracerLocation: {fileID: 0}
 --- !u!1 &2665789874667606232
 GameObject:
   m_ObjectHideFlags: 0
@@ -624,7 +675,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &7585286417963411986
 Transform:
   m_ObjectHideFlags: 0
@@ -702,7 +753,7 @@ Light:
   m_Type: 2
   m_Shape: 0
   m_Color: {r: 1, g: 0.8392157, b: 0, a: 1}
-  m_Intensity: 1
+  m_Intensity: 0
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -857,7 +908,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8575169972634479405}
-  m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
+  m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0

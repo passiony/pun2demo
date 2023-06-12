@@ -367,12 +367,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6051281359171802}
-  - component: {fileID: 68264404407590494}
-  - component: {fileID: 142772835283174634}
-  - component: {fileID: 111491043039775170}
-  - component: {fileID: 108684671910463074}
+  - component: {fileID: 2380707137824255033}
+  - component: {fileID: 2380707137824255034}
+  - component: {fileID: 2380707137824255037}
   m_Layer: 28
-  m_Name: PistolGun
+  m_Name: Pistol
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -386,7 +385,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8906736876570496}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.31211984, y: 0.179, z: -1.6554857}
+  m_LocalPosition: {x: 0, y: 0, z: 0.182}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -399,33 +398,124 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &68264404407590494
-BoxCollider:
+--- !u!95 &2380707137824255033
+Animator:
+  serializedVersion: 5
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8906736876570496}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 0.06, y: 0.15, z: 0.25}
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!135 &142772835283174634
-SphereCollider:
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 966584bde31cdf4498b3f57364005a92, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!82 &2380707137824255034
+AudioSource:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8906736876570496}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
   m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Center: {x: -0.0009510005, y: 0.0908355, z: 0}
---- !u!114 &111491043039775170
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!114 &2380707137824255037
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -434,61 +524,48 @@ MonoBehaviour:
   m_GameObject: {fileID: 8906736876570496}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3e704e820a055af41b5a98fa3a79f767, type: 3}
+  m_Script: {fileID: 11500000, guid: 3424d68ba7a6fdf48bc0745e2dbc5c34, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_TriggerEnableDelay: 4
-  m_PickupOnTriggerEnter: 0
-  m_RotationSpeed: {x: 0, y: 0, z: 0}
-  m_PickupAudioClipSet:
-    m_AudioConfig: {fileID: 0}
-    m_AudioClips:
-    - {fileID: 8300000, guid: dd2a7c92100b2814d893cfcc88f39c9e, type: 3}
-  m_PickupMessageText: PICKED UP PISTOL AMMO
-  m_PickupMessageIcon: {fileID: 0}
-  m_ItemPickupSet: []
-  m_AlwaysPickup: 0
-  m_ItemDefinitionAmounts:
-  - ItemDefinition: {fileID: 114982450061250758, guid: 5481010ef14c32f4cb7b6661b0c59fb4, type: 2}
-    Amount: 1
-  - ItemDefinition: {fileID: 114575177125770392, guid: 5481010ef14c32f4cb7b6661b0c59fb4, type: 2}
-    Amount: 36
---- !u!114 &108684671910463074
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8906736876570496}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bf61090e160b840499607b4e4942727b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_InitializeOnEnable: 0
-  m_Mass: 1
-  m_StartVelocityMultiplier: 1
-  m_GravityMagnitude: 9.8
-  m_Speed: 1
-  m_RotationSpeed: 4
-  m_Damping: 0.1
-  m_RotationDamping: 0.1
-  m_RotateInMoveDirection: 0
-  m_SettleThreshold: 0
-  m_SidewaysSettleThreshold: 0.045
-  m_StartSidewaysVelocityMagnitude: 3
+  m_ID: 101
+  m_CharacterTransform: {fileID: 0}
+  FirePointLocation: {fileID: 5945954651489551201}
+  m_FireRate: 0.1
+  m_FireCount: 1
+  m_Spread: 20
+  m_FireAudio:
+    m_FireAudioClip: {fileID: 8300000, guid: 44f67ce8604a60548939a118cc600a43, type: 3}
+    m_DryFireAudioClip: {fileID: 8300000, guid: 39274c6f81b3a8f49b5eca2b2ea18c28, type: 3}
+    m_EquipAudioClip: {fileID: 8300000, guid: a66127f63ae500a4586bdfc6eb2957fc, type: 3}
+    m_UnequipAudioClip: {fileID: 8300000, guid: b6a95e7752ff1974086fad46b83ea2b0, type: 3}
+    m_ReloadAudioClip: {fileID: 8300000, guid: 2ecf7f11360a7854eb93cba74f6098cb, type: 3}
+  m_DamageAmount: 10
+  m_ImpactForce: 2
+  m_ImpactForceFrames: 15
+  m_ClipSize: 50
+  m_HitscanFireRange: 1000
+  m_MaxHitscanCollisionCount: 15
   m_ImpactLayers:
     serializedVersion: 2
-    m_Bits: 268435425
-  m_SurfaceImpact: {fileID: 0}
-  m_ForceMultiplier: 40
-  m_CollisionMode: 1
-  m_ReflectMultiplier: 1
-  m_MaxCollisionCount: 5
-  m_MaxPositionCount: 150
-  m_ActiveAudioClipSet:
-    m_AudioConfig: {fileID: 0}
-    m_AudioClips: []
+    m_Bits: 4294967295
+  m_HitscanTriggerInteraction: 1
+  m_MuzzleFlash: {fileID: 7266028649276936210}
+  m_Shell: {fileID: 1095859200011794, guid: 44a8f47a637da6545a44e9f505aaf7b0, type: 3}
+  ShellLocation: {fileID: 6127922877615578}
+  m_ShellVelocity:
+    m_MinValue: {x: 3, y: 0, z: 0}
+    m_MaxValue: {x: 4, y: 2, z: 0}
+    m_MinMagnitude: {x: 0, y: 0, z: 0}
+  m_ShellTorque:
+    m_MinValue: {x: -50, y: -50, z: -50}
+    m_MaxValue: {x: 50, y: 50, z: 50}
+    m_MinMagnitude: {x: 0, y: 0, z: 0}
+  m_ShellEjectDelay: 0
+  m_Smoke: {fileID: 0}
+  SmokeLocation: {fileID: 0}
+  m_SmokeSpawnDelay: 0
+  m_Tracer: {fileID: 0}
+  TracerLocation: {fileID: 0}
 --- !u!1 &8907190991594530
 GameObject:
   m_ObjectHideFlags: 0
@@ -601,7 +678,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8942927439135404}
-  m_LocalRotation: {x: 0.0000004731225, y: 0.81806606, z: 0.0000005851255, w: 0.57512426}
+  m_LocalRotation: {x: 0.00000047312218, y: 0.81806606, z: 0.00000058512626, w: 0.5751243}
   m_LocalPosition: {x: -0.069643155, y: 0.000000005257917, z: -4.65661e-10}
   m_LocalScale: {x: 0.99999994, y: 1, z: 0.9999998}
   m_ConstrainProportionsScale: 0
@@ -683,15 +760,15 @@ GameObject:
   - component: {fileID: 7261276983697158822}
   - component: {fileID: 7251627866887756564}
   - component: {fileID: 7242058397821194316}
-  - component: {fileID: 7296861968698214772}
   - component: {fileID: 7301463805220296662}
+  - component: {fileID: 2380707137949192427}
   m_Layer: 28
   m_Name: MuzzleFlash
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &7261276983697158822
 Transform:
   m_ObjectHideFlags: 0
@@ -757,22 +834,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &7296861968698214772
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7266028649276936210}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 533c81f655f906f46b89d75f31829bcd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_TintColorPropertyName: _TintColor
-  m_StartAlpha: 0.5
-  m_MinFadeSpeed: 3
-  m_MaxFadeSpeed: 4
 --- !u!108 &7301463805220296662
 Light:
   m_ObjectHideFlags: 0
@@ -785,7 +846,7 @@ Light:
   m_Type: 2
   m_Shape: 0
   m_Color: {r: 1, g: 0.8392157, b: 0, a: 1}
-  m_Intensity: 1
+  m_Intensity: 0
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -835,3 +896,19 @@ Light:
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
+--- !u!114 &2380707137949192427
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7266028649276936210}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6e97d1af6c2d7a4ebc571f86965bd87, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_TintColorPropertyName: _TintColor
+  m_StartAlpha: 0.5
+  m_MinFadeSpeed: 3
+  m_MaxFadeSpeed: 4
