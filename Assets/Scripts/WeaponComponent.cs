@@ -31,13 +31,22 @@ public class WeaponComponent : MonoBehaviour
         {
             m_Weapon.UseItem();
         }
+
+        if (Input.GetKeyUp(KeyCode.Q))
+        {
+            int gunid = (int)m_WeaponId;
+            if (++gunid >= m_Weapons.Length) gunid = 0;
+            LoadWeapon((EGunID)gunid);
+        }
     }
 
     public void LoadWeapon(EGunID gunId)
     {
+        Debug.Log("LoadWeapon:" + gunId);
         m_WeaponId = gunId;
         m_Weapon.gameObject.SetActive(false);
         m_Weapon = m_WeaponDic[m_WeaponId];
         m_Weapon.gameObject.SetActive(true);
+        m_Weapon.Equip(transform);
     }
 }

@@ -5,6 +5,11 @@ TagManager:
   serializedVersion: 2
   tags:
   - Supply
+  - Grass
+  - Metal
+  - Title
+  - Water
+  - Wood
   layers:
   - Default
   - TransparentFX

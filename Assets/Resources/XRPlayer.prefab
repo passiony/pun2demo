@@ -3086,6 +3086,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6332117360018805313, guid: 7dab76f4a0a29fa4298fdb5477601762, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6332117360018805313, guid: 7dab76f4a0a29fa4298fdb5477601762, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7dab76f4a0a29fa4298fdb5477601762, type: 3}
 --- !u!4 &6249374361504519912 stripped
@@ -3152,6 +3160,14 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2380707137824255033, guid: d03a85c4289f8ee4fb4992d93e7895d6, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2380707137824255033, guid: d03a85c4289f8ee4fb4992d93e7895d6, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2380707137824255037, guid: d03a85c4289f8ee4fb4992d93e7895d6, type: 3}
       propertyPath: m_ID
       value: 0
@@ -3170,6 +3186,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 255215657}
     m_Modifications:
+    - target: {fileID: 1581487764870180549, guid: 25fba32c1f8c4ce409e0117475f7de02, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1581487764870180549, guid: 25fba32c1f8c4ce409e0117475f7de02, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6752079300739285418, guid: 25fba32c1f8c4ce409e0117475f7de02, type: 3}
       propertyPath: m_Name
       value: AssaultRifle
@@ -3242,6 +3266,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 317672725460869368, guid: 32f99ba6b50b76b4cb8dcfee79643538, type: 3}
       propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6087495180285698506, guid: 32f99ba6b50b76b4cb8dcfee79643538, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6087495180285698506, guid: 32f99ba6b50b76b4cb8dcfee79643538, type: 3}
+      propertyPath: m_ApplyRootMotion
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6441949189086533238, guid: 32f99ba6b50b76b4cb8dcfee79643538, type: 3}
