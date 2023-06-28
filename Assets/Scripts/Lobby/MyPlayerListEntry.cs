@@ -20,8 +20,7 @@ namespace Photon.Pun.Racer
     {
         [Header("UI References")] public Text PlayerNameText;
 
-        public Image PlayerColorImage;
-        public Button PlayerRacerButton;
+        public Button PlayerColorButton;
         public Button PlayerReadyButton;
         public Image PlayerReadyImage;
 
@@ -47,7 +46,7 @@ namespace Photon.Pun.Racer
                 {
                     { RacerGame.PLAYER_READY, isPlayerReady },
                     { RacerGame.PLAYER_LIVES, RacerGame.PLAYER_MAX_LIVES },
-                    { RacerGame.PLAYER_RACER, 0 }
+                    { RacerGame.PLAYER_TEAM, 0 }
                 };
                 PhotonNetwork.LocalPlayer.SetCustomProperties(initialProps);
                 PhotonNetwork.LocalPlayer.SetScore(0);
@@ -88,8 +87,8 @@ namespace Photon.Pun.Racer
             {
                 if (p.ActorNumber == ownerId)
                 {
-                    PlayerColorImage.color = RacerGame.GetColor(p.GetPlayerNumber());
-                    PlayerRacerButton.GetComponentInChildren<Text>().text = RacerGame.GetRacer(p.GetPlayerRacer());
+                    PlayerColorButton.image.color = RacerGame.GetColor(p.GetPlayerNumber());
+                    // PlayerRacerButton.GetComponentInChildren<Text>().text = RacerGame.GetRacer(p.GetPlayerRacer());
                 }
             }
         }
@@ -100,9 +99,10 @@ namespace Photon.Pun.Racer
             PlayerReadyImage.enabled = playerReady;
         }
 
-        public void SetRacer(int racer)
+        public void SetTeam(int team)
         {
-            PlayerRacerButton.GetComponentInChildren<Text>().text = RacerGame.GetRacer(racer);
+            PlayerColorButton.image.color = RacerGame.GetColor(team);
+            // PlayerRacerButton.GetComponentInChildren<Text>().text = RacerGame.GetRacer(racer);
         }
     }
 }

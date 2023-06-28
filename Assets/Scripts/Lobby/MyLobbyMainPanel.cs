@@ -1,39 +1,40 @@
-﻿using ExitGames.Client.Photon;
+﻿using System;
+using ExitGames.Client.Photon;
 using Photon.Realtime;
 using System.Collections.Generic;
 using Photon.Pun.Demo.Asteroids;
+using Photon.Pun.Demo.PunBasics;
+using Photon.Pun.UtilityScripts;
 using UnityEngine;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 namespace Photon.Pun.Racer
 {
     public class MyLobbyMainPanel : MonoBehaviourPunCallbacks
     {
-        [Header("Login Panel")]
-        public GameObject LoginPanel;
+        [Header("Loading")] [SerializeField] private LoaderAnime loaderAnime;
+
+        [Header("Login Panel")] public GameObject LoginPanel;
 
         public InputField PlayerNameInput;
+        public InputField AddressInput;
 
-        [Header("Selection Panel")]
-        public GameObject SelectionPanel;
+        [Header("Selection Panel")] public GameObject SelectionPanel;
 
-        [Header("Create Room Panel")]
-        public GameObject CreateRoomPanel;
+        [Header("Create Room Panel")] public GameObject CreateRoomPanel;
 
         public InputField RoomNameInputField;
         public InputField MaxPlayersInputField;
 
-        [Header("Join Random Room Panel")]
-        public GameObject JoinRandomRoomPanel;
+        [Header("Join Random Room Panel")] public GameObject JoinRandomRoomPanel;
 
-        [Header("Room List Panel")]
-        public GameObject RoomListPanel;
+        [Header("Room List Panel")] public GameObject RoomListPanel;
 
         public GameObject RoomListContent;
         public GameObject RoomListEntryPrefab;
 
-        [Header("Inside Room Panel")]
-        public GameObject InsideRoomPanel;
+        [Header("Inside Room Panel")] public GameObject InsideRoomPanel;
 
         public Button StartGameButton;
         public GameObject PlayerListEntryPrefab;
@@ -41,18 +42,26 @@ namespace Photon.Pun.Racer
         private Dictionary<string, RoomInfo> cachedRoomList;
         private Dictionary<string, GameObject> roomListEntries;
         private Dictionary<int, GameObject> playerListEntries;
-
+        private string gameVersion = "0.0.1";
+        private bool isConnecting;
 
         public void Awake()
         {
-            PhotonNetwork.AutomaticallySyncScene = true;
+            if (loaderAnime == null)
+            {
+                Debug.LogError("<Color=Red><b>Missing</b></Color> loaderAnime Reference.", this);
+            }
 
+            PhotonNetwork.AutomaticallySyncScene = true;
             cachedRoomList = new Dictionary<string, RoomInfo>();
             roomListEntries = new Dictionary<string, GameObject>();
-            
-            PlayerNameInput.text = "Player " + Random.Range(1000, 10000);
         }
 
+        private void Start()
+        {
+            SetActivePanel(LoginPanel.name);
+            PlayerNameInput.text = "Player" + Random.Range(1000, 10000);
+        }
 
         #region PUN CALLBACKS
 
@@ -97,7 +106,7 @@ namespace Photon.Pun.Racer
         {
             string roomName = "Room " + Random.Range(1000, 10000);
 
-            RoomOptions options = new RoomOptions {MaxPlayers = 8};
+            RoomOptions options = new RoomOptions { MaxPlayers = 8 };
 
             PhotonNetwork.CreateRoom(roomName, options, null);
         }
@@ -106,7 +115,6 @@ namespace Photon.Pun.Racer
         {
             // joining (or entering) a room invalidates any cached lobby room list (even if LeaveLobby was not called due to just joining a room)
             cachedRoomList.Clear();
-
 
             SetActivePanel(InsideRoomPanel.name);
 
@@ -125,7 +133,7 @@ namespace Photon.Pun.Racer
                 object isPlayerReady;
                 if (p.CustomProperties.TryGetValue(RacerGame.PLAYER_READY, out isPlayerReady))
                 {
-                    entry.GetComponent<MyPlayerListEntry>().SetPlayerReady((bool) isPlayerReady);
+                    entry.GetComponent<MyPlayerListEntry>().SetPlayerReady((bool)isPlayerReady);
                 }
 
                 playerListEntries.Add(p.ActorNumber, entry);
@@ -135,7 +143,7 @@ namespace Photon.Pun.Racer
 
             Hashtable props = new Hashtable
             {
-                {RacerGame.PLAYER_LOADED_LEVEL, false}
+                { RacerGame.PLAYER_LOADED_LEVEL, false }
             };
             PhotonNetwork.LocalPlayer.SetCustomProperties(props);
         }
@@ -194,11 +202,13 @@ namespace Photon.Pun.Racer
                 object isPlayerReady;
                 if (changedProps.TryGetValue(RacerGame.PLAYER_READY, out isPlayerReady))
                 {
-                    entry.GetComponent<MyPlayerListEntry>().SetPlayerReady((bool) isPlayerReady);
+                    entry.GetComponent<MyPlayerListEntry>().SetPlayerReady((bool)isPlayerReady);
                 }
-                if (changedProps.TryGetValue(RacerGame.PLAYER_RACER, out isPlayerReady))
+
+                object teamIndex;
+                if (changedProps.TryGetValue(RacerGame.PLAYER_TEAM, out teamIndex))
                 {
-                    entry.GetComponent<MyPlayerListEntry>().SetRacer((int) isPlayerReady);
+                    entry.GetComponent<MyPlayerListEntry>().SetTeam((int)teamIndex);
                 }
             }
 
@@ -226,9 +236,9 @@ namespace Photon.Pun.Racer
 
             byte maxPlayers;
             byte.TryParse(MaxPlayersInputField.text, out maxPlayers);
-            maxPlayers = (byte) Mathf.Clamp(maxPlayers, 2, 8);
+            maxPlayers = (byte)Mathf.Clamp(maxPlayers, 2, 8);
 
-            RoomOptions options = new RoomOptions {MaxPlayers = maxPlayers, PlayerTtl = 10000 };
+            RoomOptions options = new RoomOptions { MaxPlayers = maxPlayers, PlayerTtl = 10000 };
 
             PhotonNetwork.CreateRoom(roomName, options, null);
         }
@@ -247,12 +257,21 @@ namespace Photon.Pun.Racer
 
         public void OnLoginButtonClicked()
         {
+            isConnecting = true;
+            loaderAnime?.StartLoaderAnimation();
+
             string playerName = PlayerNameInput.text;
+            string address = AddressInput.text;
 
             if (!playerName.Equals(""))
             {
                 PhotonNetwork.LocalPlayer.NickName = playerName;
-                PhotonNetwork.ConnectUsingSettings();
+                PhotonNetwork.LocalPlayer.JoinTeam(1);
+                PhotonNetwork.GameVersion = this.gameVersion;
+                // PhotonNetwork.ConnectUsingSettings();
+
+                PhotonNetwork.ConnectToMaster(address, PhotonNetwork.PhotonServerSettings.AppSettings.Port,
+                    PhotonNetwork.PhotonServerSettings.AppSettings.AppIdRealtime);
             }
             else
             {
@@ -292,7 +311,7 @@ namespace Photon.Pun.Racer
                 object isPlayerReady;
                 if (p.CustomProperties.TryGetValue(RacerGame.PLAYER_READY, out isPlayerReady))
                 {
-                    if (!(bool) isPlayerReady)
+                    if (!(bool)isPlayerReady)
                     {
                         return false;
                     }
@@ -305,7 +324,7 @@ namespace Photon.Pun.Racer
 
             return true;
         }
-        
+
         private void ClearRoomListView()
         {
             foreach (GameObject entry in roomListEntries.Values)
@@ -327,7 +346,8 @@ namespace Photon.Pun.Racer
             SelectionPanel.SetActive(activePanel.Equals(SelectionPanel.name));
             CreateRoomPanel.SetActive(activePanel.Equals(CreateRoomPanel.name));
             JoinRandomRoomPanel.SetActive(activePanel.Equals(JoinRandomRoomPanel.name));
-            RoomListPanel.SetActive(activePanel.Equals(RoomListPanel.name));    // UI should call OnRoomListButtonClicked() to activate this
+            RoomListPanel.SetActive(
+                activePanel.Equals(RoomListPanel.name)); // UI should call OnRoomListButtonClicked() to activate this
             InsideRoomPanel.SetActive(activePanel.Equals(InsideRoomPanel.name));
         }
 
@@ -366,7 +386,8 @@ namespace Photon.Pun.Racer
                 GameObject entry = Instantiate(RoomListEntryPrefab);
                 entry.transform.SetParent(RoomListContent.transform);
                 entry.transform.localScale = Vector3.one;
-                entry.GetComponent<RoomListEntry>().Initialize(info.Name, (byte)info.PlayerCount, (byte)info.MaxPlayers);
+                entry.GetComponent<RoomListEntry>()
+                    .Initialize(info.Name, (byte)info.PlayerCount, (byte)info.MaxPlayers);
 
                 roomListEntries.Add(info.Name, entry);
             }

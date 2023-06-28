@@ -40,13 +40,9 @@ namespace Photon.Pun.Demo.PunBasics
             {
                 Debug.LogError("<Color=Red><b>Missing</b></Color> loaderAnime Reference.", this);
             }
-
             // #Critical
             // this makes sure we can use PhotonNetwork.LoadLevel() on the master client and all clients in the same room sync their level automatically
             PhotonNetwork.AutomaticallySyncScene = true;
-
-            controlPanel.transform.Find("Connect Button").GetComponent<Button>().onClick.AddListener(Connect);
-            address = controlPanel.transform.Find("IP InputField").GetComponent<InputField>().text;
         }
 
         public void Connect()

@@ -144,10 +144,7 @@ namespace Photon.Pun.Racer
 
         public override void OnPlayerPropertiesUpdate(Player targetPlayer, Hashtable changedProps)
         {
-            if (changedProps != null && changedProps.ContainsKey(MyPunPlayerLaps.PlayerLapsProp))
-            {
-                CheckEndOfGame();
-            }
+
         }
 
         #endregion
@@ -155,17 +152,9 @@ namespace Photon.Pun.Racer
         private void CheckEndOfGame()
         {
             bool allDestroyed = true;
-
             foreach (Player p in PhotonNetwork.PlayerList)
             {
-                object laps;
-                if (p.CustomProperties.TryGetValue(MyPunPlayerLaps.PlayerLapsProp, out laps))
-                {
-                    // if ((int)laps > LapSelector.nLaps)
-                    // {
-                    //     raceFinish.ShowFinish(p.IsLocal);
-                    // }
-                }
+
             }
         }
 
