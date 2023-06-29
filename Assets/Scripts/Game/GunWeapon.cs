@@ -16,6 +16,7 @@ public class GunWeapon : MonoBehaviour
 {
     [SerializeField] protected EGunID m_ID;
 
+    protected VRPlayerController m_Owner;
     protected Transform m_CharacterTransform;
 
     [SerializeField] protected Transform FirePointLocation;
@@ -102,10 +103,11 @@ public class GunWeapon : MonoBehaviour
         m_FireAudio.Init(GetComponent<AudioSource>());
     }
     
-    public void Equip(Transform character)
+    public void Equip(VRPlayerController owner)
     {
         gameObject.SetActive(true);
-        m_CharacterTransform = character;
+        m_Owner = owner;
+        m_CharacterTransform = owner.transform;
         m_ClipRemaining = m_ClipSize;
         m_FireAudio.PlayEquipFire();
     }
@@ -141,6 +143,11 @@ public class GunWeapon : MonoBehaviour
 
     private void HitscanFire()
     {
+        if (!m_Owner.photonView.IsMine)
+        {
+            return;
+        }
+        
         var firePoint = FirePointLocation.position;
         //useLookPosition ? m_LookSource.LookPosition(true) : m_ShootableWeaponPerspectiveProperties.FirePointLocation.position;
         var fireDirection = FireDirection(firePoint);
@@ -171,7 +178,7 @@ public class GunWeapon : MonoBehaviour
                 if (damageTarget != null)
                 {
                     var pooledDamageData = new DamageData();
-                    pooledDamageData.SetDamage(null, damageAmount, closestRaycastHit.point, fireDirection,
+                    pooledDamageData.SetDamage(m_Owner, damageAmount, closestRaycastHit.point, fireDirection,
                         m_ImpactForce, m_ImpactForceFrames, 0, closestRaycastHit.collider);
 
                     damageTarget.Damage(pooledDamageData);

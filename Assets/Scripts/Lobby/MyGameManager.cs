@@ -24,7 +24,8 @@ namespace Photon.Pun.MFPS
     /// Deals with quiting the room and the game
     /// Deals with level loading (outside the in room synchronization)
     /// </summary>
-    public class MyGameManager : MonoBehaviourPunCallbacks
+    public class 
+        MyGameManager : MonoBehaviourPunCallbacks
     {
         static public MyGameManager Instance;
 
@@ -77,6 +78,8 @@ namespace Photon.Pun.MFPS
                     var player = PhotonNetwork.Instantiate(this.playerPrefab.name, born.position, Quaternion.identity, 0);
                     // player.GetComponentInChildren<ChkTrigger>().CarPosListNumber = carPos;
                     // FindObjectOfType<Continue>().Play();
+                    
+                    
                 }
                 else
                 {

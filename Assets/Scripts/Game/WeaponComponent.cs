@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class WeaponComponent : MonoBehaviour
 {
+    private VRPlayerController m_Owner;
     private GunWeapon[] m_Weapons;
     private Dictionary<EGunID, GunWeapon> m_WeaponDic;
     private GunWeapon m_Weapon;
@@ -10,6 +11,7 @@ public class WeaponComponent : MonoBehaviour
 
     private void Awake()
     {
+        m_Owner = this.GetComponentInParent<VRPlayerController>();
         m_Weapons = this.GetComponentsInChildren<GunWeapon>(true);
         m_WeaponDic = new Dictionary<EGunID, GunWeapon>();
         foreach (var weapon in m_Weapons)
@@ -22,22 +24,7 @@ public class WeaponComponent : MonoBehaviour
     void Start()
     {
         m_Weapon = m_WeaponDic[m_WeaponId];
-        m_Weapon.Equip(transform);
-    }
-
-    void Update()
-    {
-        if (Input.GetMouseButtonDown(0))
-        {
-            m_Weapon.UseItem();
-        }
-
-        if (Input.GetKeyUp(KeyCode.Q))
-        {
-            int gunid = (int)m_WeaponId;
-            if (++gunid >= m_Weapons.Length) gunid = 0;
-            LoadWeapon((EGunID)gunid);
-        }
+        m_Weapon.Equip(m_Owner);
     }
 
     public void LoadWeapon(EGunID gunId)
@@ -47,6 +34,18 @@ public class WeaponComponent : MonoBehaviour
         m_Weapon.gameObject.SetActive(false);
         m_Weapon = m_WeaponDic[m_WeaponId];
         m_Weapon.gameObject.SetActive(true);
-        m_Weapon.Equip(transform);
+        m_Weapon.Equip(m_Owner);
+    }
+
+    public void UserWeapon()
+    {
+        m_Weapon.UseItem();
+    }
+
+    public void SwitchWeapon()
+    {
+        int gunid = (int)m_WeaponId;
+        if (++gunid >= m_Weapons.Length) gunid = 0;
+        LoadWeapon((EGunID)gunid);
     }
 }

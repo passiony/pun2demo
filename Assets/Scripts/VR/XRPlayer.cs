@@ -11,6 +11,7 @@ public class XRPlayer : MonoBehaviour
     [SerializeField] private Transform LeftHand;
     [SerializeField] private Transform RightHand;
 
+    private VRPlayerController m_Player;
     private void Awake()
     {
         Instance = this;
@@ -28,5 +29,23 @@ public class XRPlayer : MonoBehaviour
             m_IKTracking.UpdateLeftHand(LeftHand.position, LeftHand.eulerAngles);
             m_IKTracking.UpdateRightHand(RightHand.position, RightHand.eulerAngles);
         }
+
+        if (m_Player)
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
+                m_Player.Fire();
+            }
+
+            if (Input.GetKeyUp(KeyCode.Q))
+            {
+                m_Player.SwitchGun();
+            }
+        }
+    }
+
+    public void SetPhotonPlayer(VRPlayerController player)
+    {
+        m_Player = player;
     }
 }
