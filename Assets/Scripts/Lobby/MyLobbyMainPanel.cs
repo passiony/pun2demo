@@ -181,6 +181,12 @@ namespace Photon.Pun.MFPS
         public override void OnPlayerEnteredRoom(Player newPlayer)
         {
             var team = newPlayer.GetPhotonTeam();
+            if (team == null)
+            {
+                team = PhotonTeamsManager.Instance.GetLessMemberCountTeam();
+                newPlayer.JoinTeam(team);
+            }
+            
             var teamParent = GetTeamParent(team.Code);
 
             GameObject entry = Instantiate(PlayerListEntryPrefab, teamParent, false);

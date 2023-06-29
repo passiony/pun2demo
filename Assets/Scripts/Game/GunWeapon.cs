@@ -102,7 +102,7 @@ public class GunWeapon : MonoBehaviour
         m_HitscanRaycastHits = new RaycastHit[m_MaxHitscanCollisionCount];
         m_FireAudio.Init(GetComponent<AudioSource>());
     }
-    
+
     public void Equip(VRPlayerController owner)
     {
         gameObject.SetActive(true);
@@ -143,11 +143,6 @@ public class GunWeapon : MonoBehaviour
 
     private void HitscanFire()
     {
-        if (!m_Owner.photonView.IsMine)
-        {
-            return;
-        }
-        
         var firePoint = FirePointLocation.position;
         //useLookPosition ? m_LookSource.LookPosition(true) : m_ShootableWeaponPerspectiveProperties.FirePointLocation.position;
         var fireDirection = FireDirection(firePoint);
@@ -168,31 +163,33 @@ public class GunWeapon : MonoBehaviour
                 continue;
             }
 
-            // The shield can absorb some (or none) of the damage from the hitscan.
-            var damageAmount = m_DamageAmount;
-
-            // If the shield didn't absorb all of the damage then it should be applied to the character.
-            if (damageAmount > 0)
+            if (m_Owner.photonView.IsMine)
             {
-                var damageTarget = DamageUtility.GetDamageTarget(hitGameObject);
-                if (damageTarget != null)
+                // The shield can absorb some (or none) of the damage from the hitscan.
+                var damageAmount = m_DamageAmount;
+                // If the shield didn't absorb all of the damage then it should be applied to the character.
+                if (damageAmount > 0)
                 {
-                    var pooledDamageData = new DamageData();
-                    pooledDamageData.SetDamage(m_Owner, damageAmount, closestRaycastHit.point, fireDirection,
-                        m_ImpactForce, m_ImpactForceFrames, 0, closestRaycastHit.collider);
-
-                    damageTarget.Damage(pooledDamageData);
-                }
-                else
-                {
-                    // If the damage target exists it will apply a force to the rigidbody in addition to procesing the damage. Otherwise just apply the force to the rigidbody. 
-                    if (m_ImpactForce > 0 && closestRaycastHit.rigidbody != null &&
-                        !closestRaycastHit.rigidbody.isKinematic)
+                    var damageTarget = DamageUtility.GetDamageTarget(hitGameObject);
+                    if (damageTarget != null)
                     {
-                        float RigidbodyForceMultiplier = 50;
-                        closestRaycastHit.rigidbody.AddForceAtPosition(
-                            (m_ImpactForce * RigidbodyForceMultiplier) * fireDirection,
-                            closestRaycastHit.point);
+                        var pooledDamageData = new DamageData();
+                        pooledDamageData.SetDamage(m_Owner, damageAmount, closestRaycastHit.point, fireDirection,
+                            m_ImpactForce, m_ImpactForceFrames, 0, closestRaycastHit.collider);
+
+                        damageTarget.Damage(pooledDamageData);
+                    }
+                    else
+                    {
+                        // If the damage target exists it will apply a force to the rigidbody in addition to procesing the damage. Otherwise just apply the force to the rigidbody. 
+                        if (m_ImpactForce > 0 && closestRaycastHit.rigidbody != null &&
+                            !closestRaycastHit.rigidbody.isKinematic)
+                        {
+                            float RigidbodyForceMultiplier = 50;
+                            closestRaycastHit.rigidbody.AddForceAtPosition(
+                                (m_ImpactForce * RigidbodyForceMultiplier) * fireDirection,
+                                closestRaycastHit.point);
+                        }
                     }
                 }
             }

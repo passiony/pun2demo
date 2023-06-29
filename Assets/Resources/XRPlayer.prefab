@@ -49,6 +49,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_WeaponId: 0
+  m_SwithRate: 1
 --- !u!1 &8517185864756493679
 GameObject:
   m_ObjectHideFlags: 0

@@ -78,8 +78,6 @@ namespace Photon.Pun.MFPS
                     var player = PhotonNetwork.Instantiate(this.playerPrefab.name, born.position, Quaternion.identity, 0);
                     // player.GetComponentInChildren<ChkTrigger>().CarPosListNumber = carPos;
                     // FindObjectOfType<Continue>().Play();
-                    
-                    
                 }
                 else
                 {

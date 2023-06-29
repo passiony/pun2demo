@@ -23,6 +23,10 @@ public class VRPlayerController : MonoBehaviourPunCallbacks, IPunObservable, IDa
         HitGameObject = gameObject;
 
         m_WeaponComponent = this.GetComponentInChildren<WeaponComponent>();
+        if (photonView.IsMine)
+        {
+            XRPlayer.Instance.SetPlayer(this);
+        }
     }
 
     public void Fire()
@@ -38,7 +42,7 @@ public class VRPlayerController : MonoBehaviourPunCallbacks, IPunObservable, IDa
     [PunRPC]
     void SyncFire()
     {
-        m_WeaponComponent.UserWeapon();
+        m_WeaponComponent.UseWeapon();
     }
 
     [PunRPC]

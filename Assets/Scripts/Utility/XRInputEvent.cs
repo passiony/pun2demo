@@ -11,12 +11,15 @@ namespace GT.Hotfix
     {
         private ActionBasedController m_ActionController;
 
-        public bool m_LastPressed;
-        public bool m_CurrPressed;
+        private bool m_LastActivePressed;
+        private bool m_CurrActivePressed;
 
-        public UnityEvent OnTriggerButtonDown = new UnityEvent();
-        public UnityEvent OnTriggerButtonUp = new UnityEvent();
-
+        private bool m_LastSelectPressed;
+        private bool m_CurrSelectPressed;
+        
+        public UnityEvent<bool> OnTriggerButton = new();
+        public UnityEvent<bool> OnGrabButton = new();
+        
         void Awake()
         {
             m_ActionController = GetComponent<ActionBasedController>();
@@ -28,22 +31,32 @@ namespace GT.Hotfix
             {
                 return;
             }
+            UpdateTrigger();
+            UpdateSelect();
+        }
 
-            m_CurrPressed = m_ActionController.activateAction.action.IsPressed();
-            if (m_CurrPressed == m_LastPressed)
+        void UpdateTrigger()
+        {
+            m_CurrActivePressed = m_ActionController.activateAction.action.IsPressed();
+            if (m_CurrActivePressed == m_LastActivePressed)
             {
                 return;
             }
 
-            m_LastPressed = m_CurrPressed;
-            if (m_CurrPressed)
+            m_LastActivePressed = m_CurrActivePressed;
+            OnTriggerButton?.Invoke(m_CurrActivePressed);
+        }
+
+        void UpdateSelect()
+        {
+            m_CurrSelectPressed = m_ActionController.selectAction.action.IsPressed();
+            if (m_CurrSelectPressed == m_LastSelectPressed)
             {
-                OnTriggerButtonDown?.Invoke();
+                return;
             }
-            else
-            {
-                OnTriggerButtonUp?.Invoke();
-            }
+            
+            m_LastSelectPressed = m_CurrSelectPressed;
+            OnGrabButton?.Invoke(m_CurrSelectPressed);
         }
     }
 }

@@ -1,10 +1,10 @@
-using System;
+using GT.Hotfix;
 using UnityEngine;
 
 public class XRPlayer : MonoBehaviour
 {
     public static XRPlayer Instance;
-    
+
     private IKTracking m_IKTracking;
 
     [SerializeField] private Transform Head;
@@ -12,15 +12,21 @@ public class XRPlayer : MonoBehaviour
     [SerializeField] private Transform RightHand;
 
     private VRPlayerController m_Player;
+    private bool m_RightTrigger;
+    private bool m_LeftTrigger;
+
     private void Awake()
     {
         Instance = this;
+        RightHand.GetComponent<XRInputEvent>().OnTriggerButton.AddListener((x) => { m_RightTrigger = x; });
+        LeftHand.GetComponent<XRInputEvent>().OnTriggerButton.AddListener((x) => { m_LeftTrigger = x; });
     }
 
     public void SetTracking(IKTracking tracking)
     {
         m_IKTracking = tracking;
     }
+
     void Update()
     {
         if (m_IKTracking)
@@ -32,19 +38,19 @@ public class XRPlayer : MonoBehaviour
 
         if (m_Player)
         {
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(0) || m_RightTrigger)
             {
                 m_Player.Fire();
             }
 
-            if (Input.GetKeyUp(KeyCode.Q))
+            if (Input.GetKeyUp(KeyCode.Q) || m_LeftTrigger)
             {
                 m_Player.SwitchGun();
             }
         }
     }
 
-    public void SetPhotonPlayer(VRPlayerController player)
+    public void SetPlayer(VRPlayerController player)
     {
         m_Player = player;
     }

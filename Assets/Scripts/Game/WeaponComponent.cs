@@ -3,12 +3,15 @@ using UnityEngine;
 
 public class WeaponComponent : MonoBehaviour
 {
+    [SerializeField] private EGunID m_WeaponId;
+    [SerializeField] private float m_SwithRate = 1f;
+
     private VRPlayerController m_Owner;
     private GunWeapon[] m_Weapons;
     private Dictionary<EGunID, GunWeapon> m_WeaponDic;
     private GunWeapon m_Weapon;
-    [SerializeField] private EGunID m_WeaponId;
-
+    private float m_LastUseTime;
+    
     private void Awake()
     {
         m_Owner = this.GetComponentInParent<VRPlayerController>();
@@ -37,15 +40,20 @@ public class WeaponComponent : MonoBehaviour
         m_Weapon.Equip(m_Owner);
     }
 
-    public void UserWeapon()
+    public void UseWeapon()
     {
         m_Weapon.UseItem();
     }
 
     public void SwitchWeapon()
     {
-        int gunid = (int)m_WeaponId;
-        if (++gunid >= m_Weapons.Length) gunid = 0;
-        LoadWeapon((EGunID)gunid);
+        if (Time.time - m_LastUseTime > m_SwithRate)
+        {
+            m_LastUseTime = Time.time;
+            int gunid = (int)m_WeaponId;
+            if (++gunid >= m_Weapons.Length) gunid = 0;
+            LoadWeapon((EGunID)gunid);
+        }
+
     }
 }
