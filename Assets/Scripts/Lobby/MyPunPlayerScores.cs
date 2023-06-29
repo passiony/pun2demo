@@ -17,7 +17,7 @@ using Photon.Pun;
 using Photon.Realtime;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
 
-namespace Photon.Pun.Racer
+namespace Photon.Pun.MFPS
 {
     /// <summary>
     /// Scoring system for PhotonPlayer

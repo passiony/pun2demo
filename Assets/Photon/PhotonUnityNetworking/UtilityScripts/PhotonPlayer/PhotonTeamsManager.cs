@@ -453,6 +453,37 @@ namespace Photon.Pun.UtilityScripts
             return 0;
         }
 
+        //
+        public PhotonTeam GetLessMemberCountTeam()
+        {
+            var min = 10;
+            PhotonTeam result = null;
+            foreach (var team in GetAvailableTeams())
+            {
+                var count = GetTeamMembersCount(team);
+                if (count < min)
+                {
+                    min = count;
+                    result = team;
+                }
+            }
+
+            return result;
+        }
+        
+        public byte GetOppositeTeam(int teamCode)
+        {
+            foreach (var team in this.teamsList)
+            {
+                if (team.Code != teamCode)
+                {
+                    return team.Code;
+                }
+            }
+
+            return 0;
+        }
+        
         #endregion
 
         #region Unused methods
@@ -504,6 +535,16 @@ namespace Photon.Pun.UtilityScripts
             return null;
         }
 
+        public static byte GetPhotonTeamCode(this Player player)
+        {
+            object teamId;
+            if (player.CustomProperties.TryGetValue(PhotonTeamsManager.TeamPlayerProp, out teamId))
+            {
+                return (byte)teamId;
+            }
+            return 0;
+        }
+        
         /// <summary>
         /// Join a team.
         /// </summary>
@@ -624,5 +665,6 @@ namespace Photon.Pun.UtilityScripts
         {
             return PhotonTeamsManager.Instance.TryGetTeamMatesOfPlayer(player, out teamMates);
         }
+
     }
 }

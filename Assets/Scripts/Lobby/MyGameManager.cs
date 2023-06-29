@@ -14,7 +14,7 @@ using UnityEngine.SceneManagement;
 using Photon.Realtime;
 using UnityEngine.UIElements;
 
-namespace Photon.Pun.Racer
+namespace Photon.Pun.MFPS
 {
 #pragma warning disable 649
 
@@ -74,8 +74,7 @@ namespace Photon.Pun.Racer
                     }
 
                     var born = bornPoints[carPos];
-                    var player =
-                        PhotonNetwork.Instantiate(this.playerPrefab.name, born.position, Quaternion.identity, 0);
+                    var player = PhotonNetwork.Instantiate(this.playerPrefab.name, born.position, Quaternion.identity, 0);
                     // player.GetComponentInChildren<ChkTrigger>().CarPosListNumber = carPos;
                     // FindObjectOfType<Continue>().Play();
                 }

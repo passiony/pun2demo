@@ -9,35 +9,44 @@ using UnityEngine;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
-namespace Photon.Pun.Racer
+namespace Photon.Pun.MFPS
 {
     public class MyLobbyMainPanel : MonoBehaviourPunCallbacks
     {
         [Header("Loading")] [SerializeField] private LoaderAnime loaderAnime;
 
-        [Header("Login Panel")] public GameObject LoginPanel;
+        [Header("Login Panel")] [SerializeField]
+        private GameObject LoginPanel;
 
-        public InputField PlayerNameInput;
-        public InputField AddressInput;
+        [SerializeField] private InputField PlayerNameInput;
+        [SerializeField] private InputField AddressInput;
 
-        [Header("Selection Panel")] public GameObject SelectionPanel;
+        [Header("Selection Panel")] [SerializeField]
+        private GameObject SelectionPanel;
 
-        [Header("Create Room Panel")] public GameObject CreateRoomPanel;
+        [Header("Create Room Panel")] [SerializeField]
+        private GameObject CreateRoomPanel;
 
-        public InputField RoomNameInputField;
-        public InputField MaxPlayersInputField;
+        [SerializeField] private InputField RoomNameInputField;
+        [SerializeField] private InputField MaxPlayersInputField;
 
-        [Header("Join Random Room Panel")] public GameObject JoinRandomRoomPanel;
+        [Header("Join Random Room Panel")] [SerializeField]
+        private GameObject JoinRandomRoomPanel;
 
-        [Header("Room List Panel")] public GameObject RoomListPanel;
+        [Header("Room List Panel")] [SerializeField]
+        private GameObject RoomListPanel;
 
-        public GameObject RoomListContent;
-        public GameObject RoomListEntryPrefab;
+        [SerializeField] private GameObject RoomListContent;
+        [SerializeField] private GameObject RoomListEntryPrefab;
 
-        [Header("Inside Room Panel")] public GameObject InsideRoomPanel;
+        [Header("Inside Room Panel")] [SerializeField]
+        private GameObject InsideRoomPanel;
 
-        public Button StartGameButton;
-        public GameObject PlayerListEntryPrefab;
+        [SerializeField] private Transform BlueTeamPanel;
+        [SerializeField] private Transform RedTeamPanel;
+
+        [SerializeField] private Button StartGameButton;
+        [SerializeField] private GameObject PlayerListEntryPrefab;
 
         private Dictionary<string, RoomInfo> cachedRoomList;
         private Dictionary<string, GameObject> roomListEntries;
@@ -125,13 +134,21 @@ namespace Photon.Pun.Racer
 
             foreach (Player p in PhotonNetwork.PlayerList)
             {
-                GameObject entry = Instantiate(PlayerListEntryPrefab);
-                entry.transform.SetParent(InsideRoomPanel.transform);
+                var team = p.GetPhotonTeam();
+                if (team == null)
+                {
+                    team = PhotonTeamsManager.Instance.GetLessMemberCountTeam();
+                    p.JoinTeam(team);
+                }
+
+                var teamParent = GetTeamParent(team.Code);
+                GameObject entry = Instantiate(PlayerListEntryPrefab, teamParent, false);
+                entry.SetActive(true);
                 entry.transform.localScale = Vector3.one;
-                entry.GetComponent<MyPlayerListEntry>().Initialize(p.ActorNumber, p.NickName);
+                entry.GetComponent<MyPlayerListEntry>().Initialize(p.ActorNumber, p.NickName, team.Code);
 
                 object isPlayerReady;
-                if (p.CustomProperties.TryGetValue(RacerGame.PLAYER_READY, out isPlayerReady))
+                if (p.CustomProperties.TryGetValue(GameUtility.PLAYER_READY, out isPlayerReady))
                 {
                     entry.GetComponent<MyPlayerListEntry>().SetPlayerReady((bool)isPlayerReady);
                 }
@@ -143,7 +160,7 @@ namespace Photon.Pun.Racer
 
             Hashtable props = new Hashtable
             {
-                { RacerGame.PLAYER_LOADED_LEVEL, false }
+                { GameUtility.PLAYER_LOADED_LEVEL, false }
             };
             PhotonNetwork.LocalPlayer.SetCustomProperties(props);
         }
@@ -163,10 +180,13 @@ namespace Photon.Pun.Racer
 
         public override void OnPlayerEnteredRoom(Player newPlayer)
         {
-            GameObject entry = Instantiate(PlayerListEntryPrefab);
-            entry.transform.SetParent(InsideRoomPanel.transform);
+            var team = newPlayer.GetPhotonTeam();
+            var teamParent = GetTeamParent(team.Code);
+
+            GameObject entry = Instantiate(PlayerListEntryPrefab, teamParent, false);
+            entry.SetActive(true);
             entry.transform.localScale = Vector3.one;
-            entry.GetComponent<MyPlayerListEntry>().Initialize(newPlayer.ActorNumber, newPlayer.NickName);
+            entry.GetComponent<MyPlayerListEntry>().Initialize(newPlayer.ActorNumber, newPlayer.NickName, team.Code);
 
             playerListEntries.Add(newPlayer.ActorNumber, entry);
 
@@ -200,15 +220,17 @@ namespace Photon.Pun.Racer
             if (playerListEntries.TryGetValue(targetPlayer.ActorNumber, out entry))
             {
                 object isPlayerReady;
-                if (changedProps.TryGetValue(RacerGame.PLAYER_READY, out isPlayerReady))
+                if (changedProps.TryGetValue(GameUtility.PLAYER_READY, out isPlayerReady))
                 {
                     entry.GetComponent<MyPlayerListEntry>().SetPlayerReady((bool)isPlayerReady);
                 }
 
-                object teamIndex;
-                if (changedProps.TryGetValue(RacerGame.PLAYER_TEAM, out teamIndex))
+                object teamCode;
+                if (changedProps.TryGetValue(PhotonTeamsManager.TeamPlayerProp, out teamCode))
                 {
-                    entry.GetComponent<MyPlayerListEntry>().SetTeam((int)teamIndex);
+                    var teamParent = GetTeamParent((byte)teamCode);
+                    entry.transform.SetParent(teamParent, false);
+                    entry.GetComponent<MyPlayerListEntry>().SetPlayerTeam((byte)teamCode);
                 }
             }
 
@@ -266,7 +288,6 @@ namespace Photon.Pun.Racer
             if (!playerName.Equals(""))
             {
                 PhotonNetwork.LocalPlayer.NickName = playerName;
-                PhotonNetwork.LocalPlayer.JoinTeam(1);
                 PhotonNetwork.GameVersion = this.gameVersion;
                 // PhotonNetwork.ConnectUsingSettings();
 
@@ -309,7 +330,7 @@ namespace Photon.Pun.Racer
             foreach (Player p in PhotonNetwork.PlayerList)
             {
                 object isPlayerReady;
-                if (p.CustomProperties.TryGetValue(RacerGame.PLAYER_READY, out isPlayerReady))
+                if (p.CustomProperties.TryGetValue(GameUtility.PLAYER_READY, out isPlayerReady))
                 {
                     if (!(bool)isPlayerReady)
                     {
@@ -390,6 +411,20 @@ namespace Photon.Pun.Racer
                     .Initialize(info.Name, (byte)info.PlayerCount, (byte)info.MaxPlayers);
 
                 roomListEntries.Add(info.Name, entry);
+            }
+        }
+
+        // new PhotonTeam { Name = "Blue", Code = 1 },
+        // new PhotonTeam { Name = "Red", Code = 2 }
+        private Transform GetTeamParent(int code)
+        {
+            if (code == 1)
+            {
+                return BlueTeamPanel;
+            }
+            else
+            {
+                return RedTeamPanel;
             }
         }
     }

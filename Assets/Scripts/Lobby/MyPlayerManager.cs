@@ -10,7 +10,7 @@
 
 using UnityEngine;
 
-namespace Photon.Pun.Racer
+namespace Photon.Pun.MFPS
 {
 #pragma warning disable 649
 
@@ -68,36 +68,10 @@ namespace Photon.Pun.Racer
             //     Debug.LogError("<Color=Red><b>Missing</b></Color> CameraWork Component on player Prefab.", this);
             // }
 
-            //动物头像
-            InitRacerRender();
             // Unity 5.4 has a new scene management. register a method to call CalledOnLevelWasLoaded.
             UnityEngine.SceneManagement.SceneManager.sceneLoaded += OnSceneLoaded;
         }
 
-        void InitRacerRender()
-        {
-            foreach (var render in racerRenders)
-            {
-                render.gameObject.SetActive(false);
-            }
-
-            m_Racer = photonView.Controller.GetPlayerRacer();
-            racerRenders[m_Racer].gameObject.SetActive(true);
-
-            if (m_Racer == 2)
-            {
-                SetLayerReceive(transform, LayerMask.NameToLayer("Fox"));
-            }
-        }
-
-        void SetLayerReceive(Transform parent, int layer)
-        {
-            parent.gameObject.layer = layer;
-            foreach (Transform child in parent)
-            {
-                SetLayerReceive(child.transform, layer);
-            }
-        }
 
         public override void OnDisable()
         {

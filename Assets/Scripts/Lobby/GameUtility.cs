@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 
-namespace Photon.Pun.Racer
+namespace Photon.Pun.MFPS
 {
-    public class RacerGame
+    public static class GameUtility
     {
         public const float ASTEROIDS_MIN_SPAWN_TIME = 5.0f;
         public const float ASTEROIDS_MAX_SPAWN_TIME = 10.0f;
@@ -16,13 +16,13 @@ namespace Photon.Pun.Racer
         public const string PLAYER_TEAM = "PlayerTeam";
         public const string PLAYER_LOADED_LEVEL = "PlayerLoadedLevel";
 
-        public static Color GetColor(int colorChoice)
+        public static Color GetTeamColor(int colorChoice)
         {
             switch (colorChoice)
             {
-                case 0: return Color.red;
-                case 1: return Color.green;
-                case 2: return Color.blue;
+                case 0: return Color.white;
+                case 1: return Color.blue;
+                case 2: return Color.red;
                 case 3: return Color.yellow;
                 case 4: return Color.cyan;
                 case 5: return Color.grey;
@@ -31,19 +31,6 @@ namespace Photon.Pun.Racer
             }
 
             return Color.black;
-        }
-        
-        public static string GetRacer(int racer)
-        {
-            switch (racer)
-            {
-                case 0: return "Panda";
-                case 1: return "Tiger";
-                case 2: return "Fox";
-                case 3: return "Pig";
-            }
-
-            return "Cat";
         }
     }
 }
