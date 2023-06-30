@@ -7,17 +7,18 @@ public class WeaponComponent : MonoBehaviour
     [SerializeField] private float m_SwithRate = 1f;
 
     private VRPlayerController m_Owner;
-    private GunWeapon[] m_Weapons;
+    private GunWeapon[] m_AllWeapons;
     private Dictionary<EGunID, GunWeapon> m_WeaponDic;
-    private GunWeapon m_Weapon;
+    
+    private GunWeapon m_CurrentWeapon;
     private float m_LastUseTime;
     
     private void Awake()
     {
         m_Owner = this.GetComponentInParent<VRPlayerController>();
-        m_Weapons = this.GetComponentsInChildren<GunWeapon>(true);
+        m_AllWeapons = this.GetComponentsInChildren<GunWeapon>(true);
         m_WeaponDic = new Dictionary<EGunID, GunWeapon>();
-        foreach (var weapon in m_Weapons)
+        foreach (var weapon in m_AllWeapons)
         {
             weapon.gameObject.SetActive(false);
             m_WeaponDic.Add(weapon.ID, weapon);
@@ -26,23 +27,23 @@ public class WeaponComponent : MonoBehaviour
 
     void Start()
     {
-        m_Weapon = m_WeaponDic[m_WeaponId];
-        m_Weapon.Equip(m_Owner);
+        m_CurrentWeapon = m_WeaponDic[m_WeaponId];
+        m_CurrentWeapon.Equip(m_Owner);
     }
 
     public void LoadWeapon(EGunID gunId)
     {
         Debug.Log("LoadWeapon:" + gunId);
         m_WeaponId = gunId;
-        m_Weapon.gameObject.SetActive(false);
-        m_Weapon = m_WeaponDic[m_WeaponId];
-        m_Weapon.gameObject.SetActive(true);
-        m_Weapon.Equip(m_Owner);
+        m_CurrentWeapon.gameObject.SetActive(false);
+        m_CurrentWeapon = m_WeaponDic[m_WeaponId];
+        m_CurrentWeapon.gameObject.SetActive(true);
+        m_CurrentWeapon.Equip(m_Owner);
     }
 
     public void UseWeapon()
     {
-        m_Weapon.UseItem();
+        m_CurrentWeapon.UseItem();
     }
 
     public void SwitchWeapon()
@@ -51,9 +52,13 @@ public class WeaponComponent : MonoBehaviour
         {
             m_LastUseTime = Time.time;
             int gunid = (int)m_WeaponId;
-            if (++gunid >= m_Weapons.Length) gunid = 0;
+            if (++gunid >= m_AllWeapons.Length) gunid = 0;
             LoadWeapon((EGunID)gunid);
         }
+    }
 
+    public GunWeapon GetCurrentWeapon()
+    {
+        return m_CurrentWeapon;
     }
 }

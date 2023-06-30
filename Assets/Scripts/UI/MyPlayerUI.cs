@@ -8,34 +8,26 @@
 // <author>developer@exitgames.com</author>
 // --------------------------------------------------------------------------------------------------------------------
 
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PlayerUI : MonoBehaviour
+public class MyPlayerUI : MonoBehaviour
 {
     [SerializeField] private Vector3 screenOffset = new Vector3(0f, 30f, 0f);
 
-    [SerializeField] private Text playerNameText;
+    [SerializeField] private TextMeshProUGUI playerNameText;
 
     [SerializeField] private Slider playerHealthSlider;
 
-    PlayerController target;
+    VRPlayerController target;
 
     float characterControllerHeight;
 
     Transform targetTransform;
 
-    Renderer targetRenderer;
-
-    CanvasGroup _canvasGroup;
-
     Vector3 targetPosition;
 
-    void Awake()
-    {
-        _canvasGroup = this.GetComponent<CanvasGroup>();
-        this.transform.SetParent(GameObject.Find("Canvas").GetComponent<Transform>(), false);
-    }
 
     void Update()
     {
@@ -55,12 +47,6 @@ public class PlayerUI : MonoBehaviour
 
     void LateUpdate()
     {
-        // Do not show the UI if we are not visible to the camera, thus avoid potential bugs with seeing the UI, but not the player itself.
-        if (targetRenderer != null)
-        {
-            this._canvasGroup.alpha = targetRenderer.isVisible ? 1f : 0f;
-        }
-
         // #Critical
         // Follow the Target GameObject on screen.
         if (targetTransform != null)
@@ -72,7 +58,7 @@ public class PlayerUI : MonoBehaviour
         }
     }
 
-    public void SetTarget(PlayerController _target)
+    public void SetTarget(VRPlayerController _target)
     {
         if (_target == null)
         {
@@ -83,7 +69,6 @@ public class PlayerUI : MonoBehaviour
         // Cache references for efficiency because we are going to reuse them.
         this.target = _target;
         targetTransform = this.target.GetComponent<Transform>();
-        targetRenderer = this.target.GetComponentInChildren<Renderer>();
 
         CharacterController _characterController = this.target.GetComponent<CharacterController>();
 

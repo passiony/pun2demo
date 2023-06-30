@@ -450,7 +450,7 @@ MonoBehaviour:
   m_ImpactLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_HitscanTriggerInteraction: 1
+  m_HitscanTriggerInteraction: 2
   m_MuzzleFlash: {fileID: 8507562594358187003}
   m_Shell: {fileID: 1095859200011794, guid: b9b26f89571f57647ac1468b60e8ab7f, type: 3}
   ShellLocation: {fileID: 6754674194132410864}

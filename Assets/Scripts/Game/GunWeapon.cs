@@ -95,6 +95,8 @@ public class GunWeapon : MonoBehaviour
     private RaycastHitComparer m_RaycastHitComparer = new RaycastHitComparer();
 
     public int ClipRemaining => m_ClipRemaining;
+    public int ClipSize => m_ClipSize;
+
     public EGunID ID => m_ID;
 
     private void Awake()

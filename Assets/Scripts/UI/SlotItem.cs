@@ -5,8 +5,8 @@ public class SlotItem : MonoBehaviour
 {
     public Text countText;
 
-    public void SetCount(int count)
+    public void SetCount(int count, int total)
     {
-        countText.text = count.ToString();
+        countText.text = $"{count}/{total}";
     }
 }

@@ -42,13 +42,13 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
     {
         if (photonView.IsMine)
         {
-            GameUI.Instance.SetTarget(this);
+            // GameUI.Instance.SetTarget(this);
             AddScore();
         }
         else
         {
             GameObject uiGo = Instantiate(this.HealthUIPrefab);
-            uiGo.GetComponent<PlayerUI>().SetTarget(this);
+            // uiGo.GetComponent<MyPlayerUI>().SetTarget(this);
         }
     }
 

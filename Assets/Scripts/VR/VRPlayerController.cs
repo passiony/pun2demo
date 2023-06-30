@@ -15,6 +15,13 @@ public class VRPlayerController : MonoBehaviourPunCallbacks, IPunObservable, IDa
     private int m_KillCount;
     
     private WeaponComponent m_WeaponComponent;
+    private MyPlayerUI m_PlayerUI;
+
+    public int HP => m_Hp;
+    public int KillCount => m_KillCount;
+    public WeaponComponent WeaponComponent => m_WeaponComponent;
+
+
     private void Awake()
     {
         m_Hp = MaxHP;
@@ -26,19 +33,27 @@ public class VRPlayerController : MonoBehaviourPunCallbacks, IPunObservable, IDa
         if (photonView.IsMine)
         {
             XRPlayer.Instance.SetPlayer(this);
+            GameUI.Instance.SetTarget(this);
+        }
+        else
+        {
+            var prefab = Resources.Load<GameObject>("PlayerUI");
+            var go = GameObject.Instantiate(prefab);
+            m_PlayerUI = go.GetComponent<MyPlayerUI>();
+            m_PlayerUI.SetTarget(this);
         }
     }
 
     public void Fire()
     {
-        photonView.RPC("SyncFire",RpcTarget.All);
+        photonView.RPC("SyncFire", RpcTarget.All);
     }
 
     public void SwitchGun()
     {
-        photonView.RPC("SyncSwtichGun",RpcTarget.All);
+        photonView.RPC("SyncSwtichGun", RpcTarget.All);
     }
-    
+
     [PunRPC]
     void SyncFire()
     {
@@ -75,13 +90,13 @@ public class VRPlayerController : MonoBehaviourPunCallbacks, IPunObservable, IDa
     }
 
     [PunRPC]
-    void OnApplyDamage(int damageAmount, int sourceViewId, PhotonMessageInfo info)
+    void OnApplyDamage(int damageAmount, int sourceViewId)
     {
         if (!photonView.IsMine)
         {
             return;
         }
-        
+
         Debug.Log("OnApplyDamage");
         if (!IsAlive())
         {
@@ -102,7 +117,7 @@ public class VRPlayerController : MonoBehaviourPunCallbacks, IPunObservable, IDa
         PhotonView view = PhotonView.Find(sourceViewId);
         view.RPC("OnKillPlayer", RpcTarget.All);
     }
-    
+
     [PunRPC]
     void OnKillPlayer()
     {
@@ -114,7 +129,7 @@ public class VRPlayerController : MonoBehaviourPunCallbacks, IPunObservable, IDa
         Debug.Log("OnKillPlayer");
         m_KillCount++;
     }
-    
+
     public bool IsAlive()
     {
         return m_Hp > 0;
@@ -124,7 +139,7 @@ public class VRPlayerController : MonoBehaviourPunCallbacks, IPunObservable, IDa
     {
         Debug.Log("死亡动画");
         GameUI.Instance.ShowDeadPanel();
-        
+
         if (photonView.IsMine)
         {
             Debug.Log("重生");

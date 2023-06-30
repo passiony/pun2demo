@@ -528,7 +528,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_ID: 101
-  m_CharacterTransform: {fileID: 0}
   FirePointLocation: {fileID: 5945954651489551201}
   m_FireRate: 0.1
   m_FireCount: 1
@@ -548,7 +547,7 @@ MonoBehaviour:
   m_ImpactLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_HitscanTriggerInteraction: 1
+  m_HitscanTriggerInteraction: 2
   m_MuzzleFlash: {fileID: 7266028649276936210}
   m_Shell: {fileID: 1095859200011794, guid: 44a8f47a637da6545a44e9f505aaf7b0, type: 3}
   ShellLocation: {fileID: 6127922877615578}
