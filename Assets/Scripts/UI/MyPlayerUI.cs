@@ -14,7 +14,7 @@ using UnityEngine.UI;
 
 public class MyPlayerUI : MonoBehaviour
 {
-    [SerializeField] private Vector3 screenOffset = new Vector3(0f, 30f, 0f);
+    [SerializeField] private Vector3 screenOffset = new Vector3(0f, 1, 0f);
 
     [SerializeField] private TextMeshProUGUI playerNameText;
 
@@ -31,13 +31,6 @@ public class MyPlayerUI : MonoBehaviour
 
     void Update()
     {
-        // Destroy itself if the target is null, It's a fail safe when Photon is destroying Instances of a Player over the network
-        if (target == null)
-        {
-            Destroy(this.gameObject);
-            return;
-        }
-
         // Reflect the Player Health
         if (playerHealthSlider != null)
         {
@@ -51,10 +44,16 @@ public class MyPlayerUI : MonoBehaviour
         // Follow the Target GameObject on screen.
         if (targetTransform != null)
         {
-            targetPosition = targetTransform.position;
+            var position = targetTransform.position;
+            targetPosition = position;
             targetPosition.y += characterControllerHeight;
 
-            this.transform.position = Camera.main.WorldToScreenPoint(targetPosition) + screenOffset;
+            // this.transform.position = Camera.main.WorldToScreenPoint(targetPosition) + screenOffset;
+            this.transform.position = targetPosition + screenOffset;
+
+            var forward = position - XRPlayer.Instance.transform.position;
+            forward.y = 0;
+            transform.forward = forward;
         }
     }
 

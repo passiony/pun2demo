@@ -69,10 +69,10 @@ namespace Photon.Pun.MFPS
 
                     // we're in a room. spawn a character for the local player. it gets synced by using PhotonNetwork.Instantiate
                     int carPos = 0;
-                    if (!PhotonNetwork.IsMasterClient)
-                    {
-                        carPos = 1;
-                    }
+                    // if (!PhotonNetwork.IsMasterClient)
+                    // {
+                    //     carPos = 1;
+                    // }
 
                     var born = bornPoints[carPos];
                     var player = PhotonNetwork.Instantiate(this.playerPrefab.name, born.position, Quaternion.identity, 0);

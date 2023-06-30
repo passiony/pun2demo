@@ -46,10 +46,13 @@ public class GameUI : MonoBehaviour
                 hpText.text = $"{target.HP}";
             }
 
-            if (slotItem != null)
+            if (slotItem)
             {
                 var gun = target.WeaponComponent.GetCurrentWeapon();
-                slotItem.SetCount(gun.ClipRemaining, gun.ClipSize);
+                if (gun)
+                {
+                    slotItem.SetCount(gun.ClipRemaining, gun.ClipSize);
+                }
             }
 
             //更新计分板

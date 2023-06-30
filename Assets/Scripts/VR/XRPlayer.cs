@@ -31,6 +31,9 @@ public class XRPlayer : MonoBehaviour
     {
         if (m_IKTracking)
         {
+            var foot = Head.position;
+            foot.y = m_IKTracking.transform.position.y;
+            m_IKTracking.UpdateRoot(foot);
             m_IKTracking.UpdateHead(Head.position, Head.eulerAngles);
             m_IKTracking.UpdateLeftHand(LeftHand.position, LeftHand.eulerAngles);
             m_IKTracking.UpdateRightHand(RightHand.position, RightHand.eulerAngles);

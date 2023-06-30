@@ -172,9 +172,12 @@ public class GunWeapon : MonoBehaviour
                 // If the shield didn't absorb all of the damage then it should be applied to the character.
                 if (damageAmount > 0)
                 {
+                    Debug.Log("HitTarget:" + hitGameObject.name);
+
                     var damageTarget = DamageUtility.GetDamageTarget(hitGameObject);
                     if (damageTarget != null)
                     {
+                        Debug.Log("damageTarget:" + damageTarget.Owner.name);
                         var pooledDamageData = new DamageData();
                         pooledDamageData.SetDamage(m_Owner, damageAmount, closestRaycastHit.point, fireDirection,
                             m_ImpactForce, m_ImpactForceFrames, 0, closestRaycastHit.collider);

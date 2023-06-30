@@ -15,12 +15,13 @@ public class VRPlayerController : MonoBehaviourPunCallbacks, IPunObservable, IDa
     private int m_KillCount;
     
     private WeaponComponent m_WeaponComponent;
+    private IKTracking m_IkTracking;
     private MyPlayerUI m_PlayerUI;
 
     public int HP => m_Hp;
     public int KillCount => m_KillCount;
     public WeaponComponent WeaponComponent => m_WeaponComponent;
-
+    
 
     private void Awake()
     {
@@ -30,6 +31,7 @@ public class VRPlayerController : MonoBehaviourPunCallbacks, IPunObservable, IDa
         HitGameObject = gameObject;
 
         m_WeaponComponent = this.GetComponentInChildren<WeaponComponent>();
+        m_IkTracking = this.GetComponent<IKTracking>();
         if (photonView.IsMine)
         {
             XRPlayer.Instance.SetPlayer(this);
@@ -86,7 +88,7 @@ public class VRPlayerController : MonoBehaviourPunCallbacks, IPunObservable, IDa
     {
         m_Hp -= (int)damageData.Amount;
         var sourceViewId = damageData.DamageOriginator.OriginatingGameObject.GetPhotonView().ViewID;
-        photonView.RPC("OnApplyDamage", RpcTarget.All, damageData.Amount, sourceViewId);
+        photonView.RPC("OnApplyDamage", RpcTarget.All, (int)damageData.Amount, sourceViewId);
     }
 
     [PunRPC]
@@ -140,6 +142,8 @@ public class VRPlayerController : MonoBehaviourPunCallbacks, IPunObservable, IDa
         Debug.Log("死亡动画");
         GameUI.Instance.ShowDeadPanel();
 
+        this.m_IkTracking.UseRagdoll(false);
+        
         if (photonView.IsMine)
         {
             Debug.Log("重生");
