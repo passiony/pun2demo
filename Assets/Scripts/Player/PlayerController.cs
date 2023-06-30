@@ -193,8 +193,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 
         if (photonView.IsMine)
         {
-            GameUI.Instance.ShowDeadPanel();
-            StartCoroutine(CoDie());
+            // GameUI.Instance.ShowDeadPanel();
+            // StartCoroutine(CoDie());
         }
     }
 
@@ -213,8 +213,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
     {
         yield return new WaitForSeconds(2);
 
-        GameUI.Instance.ShowDeadPanel();
-        photonView.RPC("Reboarn", RpcTarget.All);
+        // GameUI.Instance.ShowDeadPanel();
+        // photonView.RPC("Reboarn", RpcTarget.All);
     }
 
     /// <summary>

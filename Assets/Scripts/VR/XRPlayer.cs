@@ -1,5 +1,6 @@
 using GT.Hotfix;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class XRPlayer : MonoBehaviour
 {
@@ -7,10 +8,11 @@ public class XRPlayer : MonoBehaviour
 
     private IKTracking m_IKTracking;
 
-    [SerializeField] private Transform Head;
-    [SerializeField] private Transform LeftHand;
-    [SerializeField] private Transform RightHand;
+    [FormerlySerializedAs("Head")] [SerializeField] private Transform m_Head;
+    [FormerlySerializedAs("LeftHand")] [SerializeField] private Transform m_LeftHand;
+    [FormerlySerializedAs("RightHand")] [SerializeField] private Transform m_RightHand;
 
+    public Transform Head => m_Head;
     private VRPlayerController m_Player;
     private bool m_RightTrigger;
     private bool m_LeftTrigger;
@@ -18,8 +20,8 @@ public class XRPlayer : MonoBehaviour
     private void Awake()
     {
         Instance = this;
-        RightHand.GetComponent<XRInputEvent>().OnTriggerButton.AddListener((x) => { m_RightTrigger = x; });
-        LeftHand.GetComponent<XRInputEvent>().OnTriggerButton.AddListener((x) => { m_LeftTrigger = x; });
+        m_RightHand.GetComponent<XRInputEvent>().OnTriggerButton.AddListener((x) => { m_RightTrigger = x; });
+        m_LeftHand.GetComponent<XRInputEvent>().OnTriggerButton.AddListener((x) => { m_LeftTrigger = x; });
     }
 
     public void SetTracking(IKTracking tracking)
@@ -29,26 +31,26 @@ public class XRPlayer : MonoBehaviour
 
     void Update()
     {
-        if (m_IKTracking)
+        if (m_IKTracking && m_IKTracking.IkEnable)
         {
-            var foot = Head.position;
+            var foot = m_Head.position;
             foot.y = m_IKTracking.transform.position.y;
             m_IKTracking.UpdateRoot(foot);
-            m_IKTracking.UpdateHead(Head.position, Head.eulerAngles);
-            m_IKTracking.UpdateLeftHand(LeftHand.position, LeftHand.eulerAngles);
-            m_IKTracking.UpdateRightHand(RightHand.position, RightHand.eulerAngles);
-        }
+            m_IKTracking.UpdateHead(m_Head.position, m_Head.eulerAngles);
+            m_IKTracking.UpdateLeftHand(m_LeftHand.position, m_LeftHand.eulerAngles);
+            m_IKTracking.UpdateRightHand(m_RightHand.position, m_RightHand.eulerAngles);
 
-        if (m_Player)
-        {
-            if (Input.GetMouseButtonDown(0) || m_RightTrigger)
+            if (m_Player)
             {
-                m_Player.Fire();
-            }
+                if (Input.GetMouseButtonDown(0) || m_RightTrigger)
+                {
+                    m_Player.Fire();
+                }
 
-            if (Input.GetKeyUp(KeyCode.Q) || m_LeftTrigger)
-            {
-                m_Player.SwitchGun();
+                if (Input.GetKeyUp(KeyCode.Q) || m_LeftTrigger)
+                {
+                    m_Player.SwitchGun();
+                }
             }
         }
     }

@@ -1,4 +1,5 @@
 using System;
+using TMPro;
 using UnityEngine;
 
 public enum EGunID
@@ -18,7 +19,8 @@ public class GunWeapon : MonoBehaviour
 
     protected VRPlayerController m_Owner;
     protected Transform m_CharacterTransform;
-
+    protected Animator m_Animator;
+    
     [SerializeField] protected Transform FirePointLocation;
 
     [Tooltip("The amount of time that must elapse before the item can be used again.")] [SerializeField]
@@ -86,6 +88,7 @@ public class GunWeapon : MonoBehaviour
 
     [SerializeField] protected Transform TracerLocation;
 
+    [SerializeField] protected TextMeshProUGUI m_ClipTxt;
 
     private float m_LastUseTime;
     private bool m_Firing;
@@ -103,6 +106,7 @@ public class GunWeapon : MonoBehaviour
     {
         m_HitscanRaycastHits = new RaycastHit[m_MaxHitscanCollisionCount];
         m_FireAudio.Init(GetComponent<AudioSource>());
+        m_Animator = GetComponent<Animator>();
     }
 
     public void Equip(VRPlayerController owner)
@@ -111,35 +115,57 @@ public class GunWeapon : MonoBehaviour
         m_Owner = owner;
         m_CharacterTransform = owner.transform;
         m_ClipRemaining = m_ClipSize;
+        UpdateClipText();
         m_FireAudio.PlayEquipFire();
+        m_Animator.Play("Equip");
     }
 
-    public virtual void UseItem()
+    public void Reload()
+    {
+        m_ClipRemaining = m_ClipSize;
+        UpdateClipText();
+        m_FireAudio.PlayReloadFire();
+        m_Animator.Play("Reload");
+    }
+    
+    public virtual bool UseItem()
     {
         if (Time.time - m_LastUseTime > m_FireRate)
         {
             m_LastUseTime = Time.time;
-            Fire();
+            return Fire();
         }
+
+        return false;
     }
 
-    void Fire()
+    void UpdateClipText()
+    {
+        m_ClipTxt.text = $"{ClipRemaining}/{ClipSize}";
+    }
+
+    bool Fire()
     {
         if (m_ClipRemaining <= 0)
         {
+            m_Animator.Play("DryFire");
             m_FireAudio.PlayDryFire();
-            return;
+            return false;
         }
+
+        m_Animator.Play("Fire");
 
         m_Firing = true;
         m_ClipRemaining--;
-
+        UpdateClipText();
+        
         for (int i = 0; i < m_FireCount; ++i)
         {
             HitscanFire();
         }
 
         ApplyFireEffects();
+        return true;
     }
 
 

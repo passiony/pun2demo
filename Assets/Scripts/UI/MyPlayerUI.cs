@@ -28,7 +28,6 @@ public class MyPlayerUI : MonoBehaviour
 
     Vector3 targetPosition;
 
-
     void Update()
     {
         // Reflect the Player Health

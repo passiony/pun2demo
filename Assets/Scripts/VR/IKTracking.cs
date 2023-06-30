@@ -11,6 +11,10 @@ public class IKTracking : MonoBehaviourPun
 
     [SerializeField] private VRAwatar m_Avatar;
 
+    [SerializeField] private bool m_IkEnable;
+    public bool IkEnable => m_IkEnable;
+    public VRAwatar Avatar=> m_Avatar;
+
     public void UpdateRoot(Vector3 pos)
     {
         transform.position = pos;
@@ -41,6 +45,7 @@ public class IKTracking : MonoBehaviourPun
 
     public void UseRagdoll(bool enable)
     {
+        m_IkEnable = enable;
         if (enable)
         {
             m_Avatar.GetComponent<VRIK>().enabled = true;
@@ -65,19 +70,5 @@ public class IKTracking : MonoBehaviourPun
                 body.isKinematic = false;
             }
         }
-    }
-
-    public bool useRigdoll = false;
-    public bool lastUseRigdoll = false;
-    
-    private void Update()
-    {
-        if (useRigdoll == lastUseRigdoll)
-        {
-            return;
-        }
-        
-        lastUseRigdoll = useRigdoll;
-        UseRagdoll(useRigdoll);
     }
 }

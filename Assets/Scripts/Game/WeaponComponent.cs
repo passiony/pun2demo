@@ -5,14 +5,14 @@ public class WeaponComponent : MonoBehaviour
 {
     [SerializeField] private EGunID m_WeaponId;
     [SerializeField] private float m_SwithRate = 1f;
-
+    [SerializeField] private bool m_AutoReload = true;
     private VRPlayerController m_Owner;
     private GunWeapon[] m_AllWeapons;
     private Dictionary<EGunID, GunWeapon> m_WeaponDic;
-    
+
     private GunWeapon m_CurrentWeapon;
     private float m_LastUseTime;
-    
+
     private void Awake()
     {
         m_Owner = this.GetComponentInParent<VRPlayerController>();
@@ -43,7 +43,11 @@ public class WeaponComponent : MonoBehaviour
 
     public void UseWeapon()
     {
-        m_CurrentWeapon.UseItem();
+        bool success = m_CurrentWeapon.UseItem();
+        if (!success && m_AutoReload)
+        {
+            m_CurrentWeapon.Reload();
+        }
     }
 
     public void SwitchWeapon()
@@ -60,5 +64,11 @@ public class WeaponComponent : MonoBehaviour
     public GunWeapon GetCurrentWeapon()
     {
         return m_CurrentWeapon;
+    }
+
+    public void DropWeapon()
+    {
+        m_CurrentWeapon.gameObject.SetActive(false);
+        GunDrop.Instance.CreateDrop(m_CurrentWeapon);
     }
 }

@@ -1,7 +1,5 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using Opsive.UltimateCharacterController.UI;
 using Photon.Pun.Demo.PunBasics;
 using TMPro;
 using UnityEngine;
@@ -11,24 +9,16 @@ public class GameUI : MonoBehaviour
 {
     public static GameUI Instance;
     private VRPlayerController target;
-
-    [SerializeField] private Slider hpSlider;
-    [SerializeField] private TextMeshProUGUI hpText;
-    [SerializeField] private SlotItem slotItem;
-    [SerializeField] private GameObject scorePrefab;
-
-    [SerializeField] private Transform scorePanel;
+    [SerializeField] private TextMeshProUGUI[] scoreTexts;
     [SerializeField] private GameObject winPanel;
     [SerializeField] private GameObject losePanel;
     [SerializeField] private GameObject deadPanel;
     [SerializeField] private GameObject healthFlash;
-
-    private Dictionary<string, TextMeshProUGUI> scores;
+    [SerializeField] private TextMeshProUGUI m_TimerTxt;
 
     void Awake()
     {
         Instance = this;
-        scores = new Dictionary<string, TextMeshProUGUI>();
     }
 
     public void SetTarget(VRPlayerController _target)
@@ -36,49 +26,15 @@ public class GameUI : MonoBehaviour
         target = _target;
     }
 
-    void Update()
+    public void RefreshScoreBorad(int[] scores)
     {
-        if (target != null)
+        bool endGame = false;
+        for (int i = 1; i < scores.Length; i++)
         {
-            if (hpSlider != null)
-            {
-                hpSlider.value = target.HP / (float)target.MaxHP;
-                hpText.text = $"{target.HP}";
-            }
-
-            if (slotItem)
-            {
-                var gun = target.WeaponComponent.GetCurrentWeapon();
-                if (gun)
-                {
-                    slotItem.SetCount(gun.ClipRemaining, gun.ClipSize);
-                }
-            }
-
-            //更新计分板
-            // RefreshScoreBorad();
+            var tmp = scoreTexts[i - 1];
+            tmp.text = scores[i].ToString();
         }
     }
-
-    // void RefreshScoreBorad()
-    // {
-    //     if (MyGameManager.Instance.ScoreBoard != null)
-    //     {
-    //         bool endGame = false;
-    //         foreach (var player in MyGameManager.Instance.ScoreBoard)
-    //         {
-    //             if (!scores.ContainsKey(player.Key))
-    //             {
-    //                 var go = Instantiate(scorePrefab, scorePanel);
-    //                 go.SetActive(true);
-    //                 var tmp = go.GetComponent<TextMeshProUGUI>();
-    //                 scores.Add(player.Key, tmp);
-    //             }
-    //
-    //             scores[player.Key].text = player.Key + " : " + player.Value;
-    //         }
-    //     }
-    // }
 
     public void OnQuitClick()
     {
@@ -90,30 +46,39 @@ public class GameUI : MonoBehaviour
         healthFlash.SetActive(true);
     }
 
-    public void ShowDeadPanel()
+    public void ShowDeadPanel(Transform avatar, Action callback)
     {
         deadPanel.SetActive(true);
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
+        deadPanel.transform.position = avatar.position + avatar.forward * 2;
+        
+        // Cursor.lockState = CursorLockMode.None;
+        // Cursor.visible = true;
+        StartCoroutine(CoTimerInterval(5, 1, callback));
+    }
+
+    IEnumerator CoTimerInterval(int count, float delay, Action callback)
+    {
+        for (int i = 0; i < count; i++)
+        {
+            yield return new WaitForSeconds(delay);
+            m_TimerTxt.text = (count - i).ToString();
+        }
+
+        deadPanel.GetComponent<AutoFadeOut>().enabled = true;
+        callback?.Invoke();
     }
 
     public void ShowWinPanel()
     {
         winPanel.SetActive(true);
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
+        // Cursor.lockState = CursorLockMode.None;
+        // Cursor.visible = true;
     }
 
     public void ShowLosePanel()
     {
         losePanel.SetActive(true);
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
-    }
-
-    IEnumerator CoDelayCallFunc(float delay, Action callback)
-    {
-        yield return new WaitForSeconds(delay);
-        callback?.Invoke();
+        // Cursor.lockState = CursorLockMode.None;
+        // Cursor.visible = true;
     }
 }

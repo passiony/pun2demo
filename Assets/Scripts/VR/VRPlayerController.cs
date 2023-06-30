@@ -13,7 +13,7 @@ public class VRPlayerController : MonoBehaviourPunCallbacks, IPunObservable, IDa
     public int MaxHP => 100;
     private int m_Hp;
     private int m_KillCount;
-    
+
     private WeaponComponent m_WeaponComponent;
     private IKTracking m_IkTracking;
     private MyPlayerUI m_PlayerUI;
@@ -21,7 +21,11 @@ public class VRPlayerController : MonoBehaviourPunCallbacks, IPunObservable, IDa
     public int HP => m_Hp;
     public int KillCount => m_KillCount;
     public WeaponComponent WeaponComponent => m_WeaponComponent;
-    
+
+    public bool IsAlive()
+    {
+        return m_Hp > 0;
+    }
 
     private void Awake()
     {
@@ -44,6 +48,8 @@ public class VRPlayerController : MonoBehaviourPunCallbacks, IPunObservable, IDa
             m_PlayerUI = go.GetComponent<MyPlayerUI>();
             m_PlayerUI.SetTarget(this);
         }
+
+        m_IkTracking.UseRagdoll(true);
     }
 
     public void Fire()
@@ -130,23 +136,61 @@ public class VRPlayerController : MonoBehaviourPunCallbacks, IPunObservable, IDa
 
         Debug.Log("OnKillPlayer");
         m_KillCount++;
+        photonView.Owner.AddScore(1);
     }
 
-    public bool IsAlive()
-    {
-        return m_Hp > 0;
-    }
-
+    [PunRPC]
     void OnDead()
     {
-        Debug.Log("死亡动画");
-        GameUI.Instance.ShowDeadPanel();
-
+        Debug.Log("死亡");
+        // GameUI.Instance.ShowDeadPanel();
+        if (m_PlayerUI)
+            this.m_PlayerUI.gameObject.SetActive(false);
         this.m_IkTracking.UseRagdoll(false);
-        
+        m_WeaponComponent.DropWeapon();
+        m_IkTracking.SetHeadVisible(true);
+
         if (photonView.IsMine)
         {
             Debug.Log("重生");
+            GameUI.Instance.ShowDeadPanel(XRPlayer.Instance.Head, () =>
+            {
+                photonView.RPC("OnReborn", RpcTarget.All);
+            });
+        }
+    }
+
+    [PunRPC]
+    void OnReborn()
+    {
+        Debug.Log("重生");
+        m_Hp = MaxHP;
+        if (m_PlayerUI)
+            m_PlayerUI.gameObject.SetActive(true);
+        m_IkTracking.UseRagdoll(true);
+        m_WeaponComponent.LoadWeapon(EGunID.Pistol);
+        if (photonView.IsMine)
+            m_IkTracking.SetHeadVisible(false);
+    }
+
+    [SerializeField] private bool m_Dead = false;
+    private bool m_LastDead = false;
+
+    private void Update()
+    {
+        if (m_Dead == m_LastDead)
+        {
+            return;
+        }
+
+        m_LastDead = m_Dead;
+        if (m_Dead)
+        {
+            OnDead();
+        }
+        else
+        {
+            OnReborn();
         }
     }
 }

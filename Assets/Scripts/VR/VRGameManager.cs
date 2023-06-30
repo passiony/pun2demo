@@ -12,11 +12,14 @@ using System;
 using System.Collections.Generic;
 using Photon.Pun;
 using Photon.Pun.Demo.PunBasics;
+using Photon.Pun.MFPS;
+using Photon.Pun.UtilityScripts;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Photon.Realtime;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
 using Random = UnityEngine.Random;
+using ScoreExtensions = Photon.Pun.MFPS.ScoreExtensions;
 
 /// <summary>
 /// Game manager.
@@ -35,9 +38,6 @@ public class VRGameManager : MonoBehaviourPunCallbacks
 
     [SerializeField] public int m_Interval = 20;
     [SerializeField] private int m_WinCount = 10;
-
-    private Dictionary<string, int> m_ScoreBoard;
-    public Dictionary<string, int> ScoreBoard => m_ScoreBoard;
 
     private bool m_GameOver;
     public bool GameOver => m_GameOver;
@@ -79,17 +79,6 @@ public class VRGameManager : MonoBehaviourPunCallbacks
             XRPlayer.Instance.SetTracking(tracking);
             gameUI.SetActive(true);
         }
-
-        //创建计分板
-        if (PhotonNetwork.IsMasterClient)
-        {
-            m_ScoreBoard = new Dictionary<string, int>();
-            PhotonNetwork.CurrentRoom.SetCustomProperties(new Hashtable() { { "ScoreBoard", m_ScoreBoard } });
-        }
-        else //房主创建，非房主获取
-        {
-            m_ScoreBoard = (Dictionary<string, int>)PhotonNetwork.CurrentRoom.CustomProperties["ScoreBoard"];
-        }
     }
 
     public Transform GetRandomBornPoint()
@@ -116,45 +105,14 @@ public class VRGameManager : MonoBehaviourPunCallbacks
         // }
     }
 
-    /// <summary>
-    /// Called when a Photon Player got connected. We need to then load a bigger scene.
-    /// </summary>
-    /// <param name="other">Other.</param>
-    public override void OnPlayerEnteredRoom(Player other)
-    {
-        Debug.Log("OnPlayerEnteredRoom() " + other.NickName); // not seen if you're the player connecting
-
-        if (PhotonNetwork.IsMasterClient)
-        {
-            Debug.LogFormat("OnPlayerEnteredRoom IsMasterClient {0}",
-                PhotonNetwork.IsMasterClient); // called before OnPlayerLeftRoom
-            LoadArena();
-        }
-    }
-
-    /// <summary>
-    /// Called when a Photon Player got disconnected. We need to load a smaller scene.
-    /// </summary>
-    /// <param name="other">Other.</param>
-    public override void OnPlayerLeftRoom(Player other)
-    {
-        Debug.Log("OnPlayerLeftRoom() " + other.NickName); // seen when other disconnects
-
-        if (PhotonNetwork.IsMasterClient)
-        {
-            Debug.LogFormat("OnPlayerEnteredRoom IsMasterClient {0}",
-                PhotonNetwork.IsMasterClient); // called before OnPlayerLeftRoom
-            LoadArena();
-        }
-    }
-
     public override void OnRoomPropertiesUpdate(Hashtable propertiesThatChanged)
     {
-        if (propertiesThatChanged.ContainsKey("ScoreBoard"))
+        if (propertiesThatChanged.ContainsKey(MyPunTeamScores.PlayerScoreProp))
         {
-            m_ScoreBoard = (Dictionary<string, int>)propertiesThatChanged["ScoreBoard"];
+            var scores = ScoreExtensions.GetScores();
 
-            CheckGameOver();
+            GameUI.Instance.RefreshScoreBorad(scores);
+            CheckGameOver(scores);
         }
     }
 
@@ -164,20 +122,6 @@ public class VRGameManager : MonoBehaviourPunCallbacks
     public override void OnLeftRoom()
     {
         SceneManager.LoadScene("Launcher");
-    }
-
-    public void AddScore(string name, int score)
-    {
-        if (!m_ScoreBoard.ContainsKey(name))
-        {
-            m_ScoreBoard.Add(name, score);
-        }
-        else
-        {
-            m_ScoreBoard[name] += score;
-        }
-
-        PhotonNetwork.CurrentRoom.SetCustomProperties(new Hashtable() { { "ScoreBoard", m_ScoreBoard } });
     }
 
     public bool LeaveRoom()
@@ -212,14 +156,14 @@ public class VRGameManager : MonoBehaviourPunCallbacks
         PhotonNetwork.InstantiateRoomObject(prefab.name, point, Quaternion.identity);
     }
 
-    void CheckGameOver()
+    void CheckGameOver(int[] scores)
     {
-        foreach (var player in m_ScoreBoard)
+        for (int i = 1; i < scores.Length; i++)
         {
-            if (player.Value >= m_WinCount)
+            if (scores[i] >= m_WinCount)
             {
                 m_GameOver = true;
-                if (PlayerController.LocalPlayer.photonView.Owner.NickName == player.Key)
+                if (PhotonNetwork.LocalPlayer.GetPhotonTeamCode() == i)
                 {
                     GameUI.Instance.ShowWinPanel();
                 }
