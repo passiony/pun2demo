@@ -2,25 +2,28 @@ using System.Collections;
 using Photon.Pun;
 using UnityEngine;
 
-public class BulletSupply : MonoBehaviourPunCallbacks, ISupply
+namespace MFPS
 {
-    public float m_Duration=20;
-
-    IEnumerator Start()
+    public class BulletSupply : MonoBehaviourPunCallbacks, ISupply
     {
-        yield return new WaitForSeconds(m_Duration);
-        if (PhotonNetwork.IsMasterClient)
+        public float m_Duration = 20;
+
+        IEnumerator Start()
         {
-            PhotonNetwork.Destroy(gameObject);
+            yield return new WaitForSeconds(m_Duration);
+            if (PhotonNetwork.IsMasterClient)
+            {
+                PhotonNetwork.Destroy(gameObject);
+            }
         }
-    }
 
-    public void Supply(PlayerController _target)
-    {
-        _target.LoadBulletSupply();
-        if (PhotonNetwork.IsMasterClient)
+        public void Supply(VRPlayerController _target)
         {
-            PhotonNetwork.Destroy(gameObject);
+            // _target.LoadBulletSupply();
+            // if (PhotonNetwork.IsMasterClient)
+            // {
+            //     PhotonNetwork.Destroy(gameObject);
+            // }
         }
     }
 }

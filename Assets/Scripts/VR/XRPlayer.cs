@@ -1,70 +1,72 @@
-using GT.Hotfix;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-public class XRPlayer : MonoBehaviour
+namespace MFPS
 {
-    public static XRPlayer Instance;
-
-    private IKTracking m_IKTracking;
-
-    [FormerlySerializedAs("Head")] [SerializeField]
-    private Transform m_Head;
-
-    [FormerlySerializedAs("LeftHand")] [SerializeField]
-    private Transform m_LeftHand;
-
-    [FormerlySerializedAs("RightHand")] [SerializeField]
-    private Transform m_RightHand;
-
-    public Transform Head => m_Head;
-    private VRPlayerController m_Player;
-    private bool m_RightTrigger;
-    private bool m_LeftTrigger;
-
-    public VRPlayerController Player => m_Player;
-
-    private void Awake()
+    public class XRPlayer : MonoBehaviour
     {
-        Instance = this;
-        m_RightHand.GetComponent<XRInputEvent>().OnTriggerButton.AddListener((x) => { m_RightTrigger = x; });
-        m_LeftHand.GetComponent<XRInputEvent>().OnTriggerButton.AddListener((x) => { m_LeftTrigger = x; });
-    }
+        public static XRPlayer Instance;
 
-    public void SetTracking(IKTracking tracking)
-    {
-        m_IKTracking = tracking;
-        tracking.SetHeadVisible(false);
-    }
+        private IKTracking m_IKTracking;
 
-    void Update()
-    {
-        if (m_IKTracking && m_IKTracking.IkEnable)
+        [FormerlySerializedAs("Head")] [SerializeField]
+        private Transform m_Head;
+
+        [FormerlySerializedAs("LeftHand")] [SerializeField]
+        private Transform m_LeftHand;
+
+        [FormerlySerializedAs("RightHand")] [SerializeField]
+        private Transform m_RightHand;
+
+        public Transform Head => m_Head;
+        private VRPlayerController m_Player;
+        private bool m_RightTrigger;
+        private bool m_LeftTrigger;
+
+        public VRPlayerController Player => m_Player;
+
+        private void Awake()
         {
-            var foot = m_Head.position;
-            foot.y = m_IKTracking.transform.position.y;
-            m_IKTracking.UpdateRoot(foot);
-            m_IKTracking.UpdateHead(m_Head.position, m_Head.eulerAngles);
-            m_IKTracking.UpdateLeftHand(m_LeftHand.position, m_LeftHand.eulerAngles);
-            m_IKTracking.UpdateRightHand(m_RightHand.position, m_RightHand.eulerAngles);
+            Instance = this;
+            m_RightHand.GetComponent<XRInputEvent>().OnTriggerButton.AddListener((x) => { m_RightTrigger = x; });
+            m_LeftHand.GetComponent<XRInputEvent>().OnTriggerButton.AddListener((x) => { m_LeftTrigger = x; });
+        }
 
-            if (m_Player)
+        public void SetTracking(IKTracking tracking)
+        {
+            m_IKTracking = tracking;
+            tracking.SetHeadVisible(false);
+        }
+
+        void Update()
+        {
+            if (m_IKTracking && m_IKTracking.IkEnable)
             {
-                if (Input.GetMouseButtonDown(0) || m_RightTrigger)
-                {
-                    m_Player.Fire();
-                }
+                var foot = m_Head.position;
+                foot.y = m_IKTracking.transform.position.y;
+                m_IKTracking.UpdateRoot(foot);
+                m_IKTracking.UpdateHead(m_Head.position, m_Head.eulerAngles);
+                m_IKTracking.UpdateLeftHand(m_LeftHand.position, m_LeftHand.eulerAngles);
+                m_IKTracking.UpdateRightHand(m_RightHand.position, m_RightHand.eulerAngles);
 
-                if (Input.GetKeyUp(KeyCode.Q) || m_LeftTrigger)
+                if (m_Player)
                 {
-                    m_Player.SwitchGun();
+                    if (Input.GetMouseButtonDown(0) || m_RightTrigger)
+                    {
+                        m_Player.Fire();
+                    }
+
+                    if (Input.GetKeyUp(KeyCode.Q) || m_LeftTrigger)
+                    {
+                        m_Player.SwitchGun();
+                    }
                 }
             }
         }
-    }
 
-    public void SetPlayer(VRPlayerController player)
-    {
-        m_Player = player;
+        public void SetPlayer(VRPlayerController player)
+        {
+            m_Player = player;
+        }
     }
 }

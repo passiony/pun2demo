@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Photon.Pun.MFPS
+namespace MFPS
 {
     public static class FPSGame
     {

@@ -8,32 +8,35 @@
 // <author>developer@exitgames.com</author>
 // --------------------------------------------------------------------------------------------------------------------
 
+using System;
 using ExitGames.Client.Photon;
+using Photon.Pun;
+using Photon.Pun.UtilityScripts;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Photon.Realtime;
 using UnityEngine.UIElements;
+using Random = UnityEngine.Random;
 
-namespace Photon.Pun.MFPS
+namespace MFPS
 {
 #pragma warning disable 649
-
-    /// <summary>
-    /// Game manager.
-    /// Connects and watch Photon Status, Instantiate Player
-    /// Deals with quiting the room and the game
-    /// Deals with level loading (outside the in room synchronization)
-    /// </summary>
-    public class 
-        MyGameManager : MonoBehaviourPunCallbacks
+    public class MyGameManager : MonoBehaviourPunCallbacks
     {
+        [SerializeField]
+        private class TeamPoint
+        {
+            public string TeamCode;
+            public Transform[] Points;
+        }
+        
         static public MyGameManager Instance;
 
         private GameObject instance;
 
         public bool StartGame;
 
-        [SerializeField] private Transform[] bornPoints;
+        [SerializeField] private TeamPoint[] bornPoints;
 
         [SerializeField] private GameObject playerPrefab;
 
@@ -66,18 +69,10 @@ namespace Photon.Pun.MFPS
                 if (MyPlayerManager.LocalPlayerInstance == null)
                 {
                     Debug.LogFormat("We are Instantiating LocalPlayer from {0}", SceneManagerHelper.ActiveSceneName);
-
-                    // we're in a room. spawn a character for the local player. it gets synced by using PhotonNetwork.Instantiate
-                    int carPos = 0;
-                    // if (!PhotonNetwork.IsMasterClient)
-                    // {
-                    //     carPos = 1;
-                    // }
-
-                    var born = bornPoints[carPos];
-                    var player = PhotonNetwork.Instantiate(this.playerPrefab.name, born.position, Quaternion.identity, 0);
-                    // player.GetComponentInChildren<ChkTrigger>().CarPosListNumber = carPos;
-                    // FindObjectOfType<Continue>().Play();
+                    
+                    var team = PhotonNetwork.LocalPlayer.GetPhotonTeamCode();
+                    var born = GetBornPoit(team);
+                    PhotonNetwork.Instantiate(this.playerPrefab.name, born.position, Quaternion.identity, 0);
                 }
                 else
                 {
@@ -144,20 +139,50 @@ namespace Photon.Pun.MFPS
 
         public override void OnPlayerPropertiesUpdate(Player targetPlayer, Hashtable changedProps)
         {
-
+            object props;
+            if (changedProps.TryGetValue(MyPunTeamScores.PlayerScoreProp, out props))
+            {
+                var scores = (int[])props;
+                CheckEndOfGame(scores);
+            }
         }
 
         #endregion
 
-        private void CheckEndOfGame()
+        private void CheckEndOfGame(int[] scores)
         {
-            bool allDestroyed = true;
-            foreach (Player p in PhotonNetwork.PlayerList)
+            bool gameOver = false;
+            int winTeam = 0;
+            for (int i = 0; i < scores.Length; i++)
             {
+                if (scores[i] >= 30)
+                {
+                    winTeam = i;
+                    gameOver = true;
+                    break;
+                }
+            }
 
+            if (gameOver)
+            {
+                var win = PhotonNetwork.LocalPlayer.GetPhotonTeamCode() == winTeam;
+                if (win)
+                {
+                    GameUI.Instance.ShowWinPanel();
+                }
+                else
+                {
+                    GameUI.Instance.ShowLosePanel();
+                }
             }
         }
 
+        public Transform GetBornPoit(int teamCode)
+        {
+            var teamPoint = bornPoints[teamCode - 1];
+            var born = teamPoint.Points[Random.Range(0, teamPoint.Points.Length)];
+            return born;
+        }
         public bool LeaveRoom()
         {
             return PhotonNetwork.LeaveRoom();

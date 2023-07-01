@@ -17,7 +17,7 @@ using Photon.Pun;
 using Photon.Realtime;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
 
-namespace Photon.Pun.MFPS
+namespace MFPS
 {
     /// <summary>
     /// Implements consistent numbering in a room/game with help of room properties. Access them by Player.GetPlayerNumber() extension.

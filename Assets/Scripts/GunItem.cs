@@ -1,13 +1,14 @@
-using System.Collections;
-using Photon.Pun.MFPS;
 using UnityEngine;
 
-public class GunItem : MonoBehaviour
+namespace MFPS
 {
-    public EGunID m_GunType;
-
-    void Start()
+    public class GunItem : MonoBehaviour
     {
-        Destroy(gameObject, FPSGame.REBORN_TIME);
+        public EGunType m_GunType;
+
+        void Start()
+        {
+            Destroy(gameObject, FPSGame.REBORN_TIME);
+        }
     }
 }

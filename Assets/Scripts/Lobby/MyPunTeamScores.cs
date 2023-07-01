@@ -8,12 +8,13 @@
 // <author>developer@exitgames.com</author>
 // --------------------------------------------------------------------------------------------------------------------
 
+using Photon.Pun;
 using UnityEngine;
 using Photon.Pun.UtilityScripts;
 using Photon.Realtime;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
 
-namespace Photon.Pun.MFPS
+namespace MFPS
 {
     /// <summary>
     /// Scoring system for PhotonPlayer
@@ -29,8 +30,8 @@ namespace Photon.Pun.MFPS
         {
             var key = MyPunTeamScores.PlayerScoreProp;
             Hashtable properties = new Hashtable(); // using PUN's implementation of Hashtable
-            var scores = new int[3];
-            scores[player.GetPhotonTeamCode()] = newScore;
+            var scores = new int[2];
+            scores[player.GetPhotonTeamCode()-1] = newScore;
             properties[key] = scores;
 
             PhotonNetwork.CurrentRoom.SetCustomProperties(properties);
@@ -41,7 +42,7 @@ namespace Photon.Pun.MFPS
         {
             var key = MyPunTeamScores.PlayerScoreProp;
             int[] scores = GetScores();
-            scores[player.GetPhotonTeamCode()] += scoreToAddToCurrent;
+            scores[player.GetPhotonTeamCode()-1] += scoreToAddToCurrent;
 
             Hashtable properties = new Hashtable(); // using PUN's implementation of Hashtable
             properties[key] = scores;
@@ -59,7 +60,7 @@ namespace Photon.Pun.MFPS
                 return (int[])score;
             }
 
-            return new[] { 0, 0, 0 };
+            return new[] { 0, 0};
         }
     }
 }

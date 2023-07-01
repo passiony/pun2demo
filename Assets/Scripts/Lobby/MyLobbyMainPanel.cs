@@ -2,6 +2,7 @@
 using ExitGames.Client.Photon;
 using Photon.Realtime;
 using System.Collections.Generic;
+using Photon.Pun;
 using Photon.Pun.Demo.Asteroids;
 using Photon.Pun.Demo.PunBasics;
 using Photon.Pun.UtilityScripts;
@@ -9,7 +10,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
-namespace Photon.Pun.MFPS
+namespace MFPS
 {
     public class MyLobbyMainPanel : MonoBehaviourPunCallbacks
     {

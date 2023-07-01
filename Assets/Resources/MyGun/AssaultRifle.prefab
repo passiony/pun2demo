@@ -667,7 +667,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3424d68ba7a6fdf48bc0745e2dbc5c34, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_ID: 1
+  mType: 1
   FirePointLocation: {fileID: 6993555667285005003}
   m_FireRate: 0.1
   m_FireCount: 1

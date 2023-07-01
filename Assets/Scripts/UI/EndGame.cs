@@ -1,4 +1,4 @@
-using Photon.Pun.Demo.PunBasics;
+using MFPS;
 using UnityEngine;
 
 public class EndGame : MonoBehaviour

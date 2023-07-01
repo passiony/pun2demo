@@ -8,166 +8,157 @@
 // <author>developer@exitgames.com</author>
 // --------------------------------------------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
 using Photon.Pun;
-using Photon.Pun.Demo.PunBasics;
-using Photon.Pun.MFPS;
 using Photon.Pun.UtilityScripts;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using Photon.Realtime;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
 using Random = UnityEngine.Random;
-using ScoreExtensions = Photon.Pun.MFPS.ScoreExtensions;
 
-/// <summary>
-/// Game manager.
-/// Connects and watch Photon Status, Instantiate Player
-/// Deals with quiting the room and the game
-/// Deals with level loading (outside the in room synchronization)
-/// </summary>
-public class VRGameManager : MonoBehaviourPunCallbacks
+namespace MFPS
 {
-    public static VRGameManager Instance;
-
-    [SerializeField] private GameObject gameUI;
-    [SerializeField] private GameObject playerPrefab;
-    [SerializeField] private GameObject[] supplies;
-    [SerializeField] private Transform[] bornPoints;
-
-    [SerializeField] public int m_Interval = 20;
-    [SerializeField] private int m_WinCount = 10;
-
-    private bool m_GameOver;
-    public bool GameOver => m_GameOver;
-
-    private float timer;
-
-    private void Awake()
+    public class VRGameManager : MonoBehaviourPunCallbacks
     {
-        Instance = this;
-    }
+        public static VRGameManager Instance;
 
-    /// <summary>
-    /// MonoBehaviour method called on GameObject by Unity during initialization phase.
-    /// </summary>
-    void Start()
-    {
-        // in case we started this demo with the wrong scene being active, simply load the menu scene
-        if (!PhotonNetwork.IsConnected)
+        [SerializeField] private GameObject gameUI;
+        [SerializeField] private GameObject playerPrefab;
+        [SerializeField] private GameObject[] supplies;
+        [SerializeField] private Transform[] bornPoints;
+
+        [SerializeField] public int m_Interval = 20;
+        [SerializeField] private int m_WinCount = 10;
+
+        private bool m_GameOver;
+        public bool GameOver => m_GameOver;
+
+        private float timer;
+
+        private void Awake()
         {
-            SceneManager.LoadScene("Launcher");
-            return;
+            Instance = this;
         }
 
-        // #Tip Never assume public properties of Components are filled up properly, always check and inform the developer of it.
-        if (playerPrefab == null)
+        /// <summary>
+        /// MonoBehaviour method called on GameObject by Unity during initialization phase.
+        /// </summary>
+        void Start()
         {
-            Debug.LogError("<Missing playerPrefab Reference. Please set it up in GameObject 'Game Manager'",
-                this);
+            // in case we started this demo with the wrong scene being active, simply load the menu scene
+            if (!PhotonNetwork.IsConnected)
+            {
+                SceneManager.LoadScene("Launcher");
+                return;
+            }
+
+            // #Tip Never assume public properties of Components are filled up properly, always check and inform the developer of it.
+            if (playerPrefab == null)
+            {
+                Debug.LogError("<Missing playerPrefab Reference. Please set it up in GameObject 'Game Manager'",
+                    this);
+            }
+            else
+            {
+                int index = Random.Range(0, bornPoints.Length);
+                var born = bornPoints[index];
+                Debug.LogFormat("We are Instantiating LocalPlayer from {0}", SceneManagerHelper.ActiveSceneName);
+                // we're in a room. spawn a character for the local player. it gets synced by using PhotonNetwork.Instantiate
+                var go = PhotonNetwork.Instantiate(this.playerPrefab.name, born.position, born.rotation, 0);
+                var tracking = go.GetComponent<IKTracking>();
+                XRPlayer.Instance.SetTracking(tracking);
+            }
         }
-        else
+
+        public Transform GetRandomBornPoint()
         {
             int index = Random.Range(0, bornPoints.Length);
             var born = bornPoints[index];
-            Debug.LogFormat("We are Instantiating LocalPlayer from {0}", SceneManagerHelper.ActiveSceneName);
-            // we're in a room. spawn a character for the local player. it gets synced by using PhotonNetwork.Instantiate
-            var go = PhotonNetwork.Instantiate(this.playerPrefab.name, born.position, born.rotation, 0);
-            var tracking = go.GetComponent<IKTracking>();
-            XRPlayer.Instance.SetTracking(tracking);
+
+            return born;
         }
-    }
 
-    public Transform GetRandomBornPoint()
-    {
-        int index = Random.Range(0, bornPoints.Length);
-        var born = bornPoints[index];
-
-        return born;
-    }
-
-    /// <summary>
-    /// MonoBehaviour method called on GameObject by Unity on every frame.
-    /// </summary>
-    void Update()
-    {
-        // if (PhotonNetwork.IsMasterClient)
-        // {
-        //     timer += Time.deltaTime;
-        //     if (timer > m_Interval)
-        //     {
-        //         timer = 0;
-        //         LoadSupplies();
-        //     }
-        // }
-    }
-
-    public override void OnRoomPropertiesUpdate(Hashtable propertiesThatChanged)
-    {
-        if (propertiesThatChanged.ContainsKey(MyPunTeamScores.PlayerScoreProp))
+        /// <summary>
+        /// MonoBehaviour method called on GameObject by Unity on every frame.
+        /// </summary>
+        void Update()
         {
-            var scores = ScoreExtensions.GetScores();
-
-            GameUI.Instance.RefreshScoreBorad(scores);
-            CheckGameOver(scores);
+            // if (PhotonNetwork.IsMasterClient)
+            // {
+            //     timer += Time.deltaTime;
+            //     if (timer > m_Interval)
+            //     {
+            //         timer = 0;
+            //         LoadSupplies();
+            //     }
+            // }
         }
-    }
 
-    /// <summary>
-    /// Called when the local player left the room. We need to load the launcher scene.
-    /// </summary>
-    public override void OnLeftRoom()
-    {
-        SceneManager.LoadScene("Launcher");
-    }
-
-    public bool LeaveRoom()
-    {
-        return PhotonNetwork.LeaveRoom();
-    }
-
-    public void QuitApplication()
-    {
-        Application.Quit();
-    }
-
-    void LoadArena()
-    {
-        // if ( ! PhotonNetwork.IsMasterClient )
-        // {
-        // 	Debug.LogError( "PhotonNetwork : Trying to Load a level but we are not the master Client" );
-        // 	return;
-        // }
-        //
-        // Debug.LogFormat( "PhotonNetwork : Loading Level : {0}", PhotonNetwork.CurrentRoom.PlayerCount );
-        //
-        // PhotonNetwork.LoadLevel("PunBasics-Room for "+PhotonNetwork.CurrentRoom.PlayerCount);
-    }
-
-    void LoadSupplies()
-    {
-        int randon = Random.Range(0, 2);
-        var prefab = supplies[randon];
-
-        Vector3 point = new Vector3(Random.Range(-15, 15), 10, Random.Range(-20, 20));
-        PhotonNetwork.InstantiateRoomObject(prefab.name, point, Quaternion.identity);
-    }
-
-    void CheckGameOver(int[] scores)
-    {
-        for (int i = 1; i < scores.Length; i++)
+        public override void OnRoomPropertiesUpdate(Hashtable propertiesThatChanged)
         {
-            if (scores[i] >= m_WinCount)
+            if (propertiesThatChanged.ContainsKey(MyPunTeamScores.PlayerScoreProp))
             {
-                m_GameOver = true;
-                if (PhotonNetwork.LocalPlayer.GetPhotonTeamCode() == i)
+                var scores = ScoreExtensions.GetScores();
+
+                GameUI.Instance.RefreshScoreBorad(scores);
+                CheckGameOver(scores);
+            }
+        }
+
+        /// <summary>
+        /// Called when the local player left the room. We need to load the launcher scene.
+        /// </summary>
+        public override void OnLeftRoom()
+        {
+            SceneManager.LoadScene("Launcher");
+        }
+
+        public bool LeaveRoom()
+        {
+            return PhotonNetwork.LeaveRoom();
+        }
+
+        public void QuitApplication()
+        {
+            Application.Quit();
+        }
+
+        void LoadArena()
+        {
+            // if ( ! PhotonNetwork.IsMasterClient )
+            // {
+            // 	Debug.LogError( "PhotonNetwork : Trying to Load a level but we are not the master Client" );
+            // 	return;
+            // }
+            //
+            // Debug.LogFormat( "PhotonNetwork : Loading Level : {0}", PhotonNetwork.CurrentRoom.PlayerCount );
+            //
+            // PhotonNetwork.LoadLevel("PunBasics-Room for "+PhotonNetwork.CurrentRoom.PlayerCount);
+        }
+
+        void LoadSupplies()
+        {
+            int randon = Random.Range(0, 2);
+            var prefab = supplies[randon];
+
+            Vector3 point = new Vector3(Random.Range(-15, 15), 10, Random.Range(-20, 20));
+            PhotonNetwork.InstantiateRoomObject(prefab.name, point, Quaternion.identity);
+        }
+
+        void CheckGameOver(int[] scores)
+        {
+            for (int i = 1; i < scores.Length; i++)
+            {
+                if (scores[i] >= m_WinCount)
                 {
-                    GameUI.Instance.ShowWinPanel();
-                }
-                else
-                {
-                    GameUI.Instance.ShowLosePanel();
+                    m_GameOver = true;
+                    if (PhotonNetwork.LocalPlayer.GetPhotonTeamCode() == i)
+                    {
+                        GameUI.Instance.ShowWinPanel();
+                    }
+                    else
+                    {
+                        GameUI.Instance.ShowLosePanel();
+                    }
                 }
             }
         }

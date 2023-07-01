@@ -1,34 +1,28 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerBody : MonoBehaviour
+namespace MFPS
 {
-    public enum EBodyPart
+    public class PlayerBody : MonoBehaviour
     {
-        Head,
-        Chest,
-        Arm,
-        Leg,
-    }
 
-    public EBodyPart m_BodyPart;
+        public EBodyPart m_BodyPart;
 
-    public float GetRealDamage(float damage)
-    {
-        switch (m_BodyPart)
+        public float GetRealDamage(float damage)
         {
-            case EBodyPart.Head:
-                return 100;
-            case EBodyPart.Chest:
-                return damage + damage;
-            case EBodyPart.Arm:
-                return damage;
-            case EBodyPart.Leg:
-                return (damage * 0.5f);
-            default:
-                return damage;
+            switch (m_BodyPart)
+            {
+                case EBodyPart.Head:
+                    return 100;
+                case EBodyPart.Chest:
+                    return damage + damage;
+                case EBodyPart.Arm:
+                    return damage;
+                case EBodyPart.Leg:
+                    return (damage * 0.5f);
+                default:
+                    return damage;
+            }
         }
     }
 }

@@ -10270,6 +10270,7 @@ GameObject:
   - component: {fileID: 460102081}
   - component: {fileID: 460102083}
   - component: {fileID: 460102082}
+  - component: {fileID: 460102084}
   m_Layer: 0
   m_Name: Lamp
   m_TagString: Untagged
@@ -10342,6 +10343,20 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 460102080}
+  m_Mesh: {fileID: 4300000, guid: dfc0a323dab2b5e40a071b073a2ab6db, type: 3}
+--- !u!64 &460102084
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 460102080}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 0
+  m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: dfc0a323dab2b5e40a071b073a2ab6db, type: 3}
 --- !u!1 &461493768
 GameObject:

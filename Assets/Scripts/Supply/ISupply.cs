@@ -1,4 +1,7 @@
-﻿public interface ISupply
+﻿namespace MFPS
 {
-    public void Supply(PlayerController _target);
+    public interface ISupply
+    {
+        public void Supply(VRPlayerController _target);
+    }
 }

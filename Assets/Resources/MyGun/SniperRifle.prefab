@@ -516,7 +516,7 @@ Camera:
     serializedVersion: 2
     m_Bits: 3489660927
   m_RenderingPath: -1
-  m_TargetTexture: {fileID: 8400000, guid: 0df004eea57d95444af464fcc5ebbfee, type: 2}
+  m_TargetTexture: {fileID: 8400000, guid: 3e33275de1765bb499f7b025631e9967, type: 2}
   m_TargetDisplay: 0
   m_TargetEye: 3
   m_HDR: 0
@@ -1021,7 +1021,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3424d68ba7a6fdf48bc0745e2dbc5c34, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_ID: 2
+  mType: 2
   FirePointLocation: {fileID: 6249317082671213145}
   m_FireRate: 1
   m_FireCount: 1
@@ -1040,7 +1040,7 @@ MonoBehaviour:
   m_MaxHitscanCollisionCount: 15
   m_ImpactLayers:
     serializedVersion: 2
-    m_Bits: 1
+    m_Bits: 4294967295
   m_HitscanTriggerInteraction: 2
   m_MuzzleFlash: {fileID: 2038981925965219257}
   m_Shell: {fileID: 1095859200011794, guid: c6492cb6dc86ab44bb34486770c1eddc, type: 3}

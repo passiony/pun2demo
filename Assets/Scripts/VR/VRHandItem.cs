@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 
-namespace GT.Hotfix
+namespace MFPS
 {
     /// <summary>
     /// VR手柄控制类

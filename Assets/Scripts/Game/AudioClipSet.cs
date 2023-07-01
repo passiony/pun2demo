@@ -8,51 +8,56 @@ using UnityEngine;
 using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
-[System.Serializable]
-public class AudioClipSet
+namespace MFPS
 {
-    [FormerlySerializedAs("m_AudioName")] [Tooltip("The AudioConfig for the set.")] [SerializeField]
-    protected string m_Name;
-
-    [FormerlySerializedAs("m_AudioClips")] [Tooltip("An array of AudioClips which belong to the set.")] [SerializeField]
-    protected AudioClip[] m_Clips;
-
-    public string Name
+    [System.Serializable]
+    public class AudioClipSet
     {
-        get { return m_Name; }
-        set { m_Name = value; }
-    }
+        [FormerlySerializedAs("m_AudioName")] [Tooltip("The AudioConfig for the set.")] [SerializeField]
+        protected string m_Name;
 
-    public AudioClip[] Clips
-    {
-        get { return m_Clips; }
-        set { m_Clips = value; }
-    }
+        [FormerlySerializedAs("m_AudioClips")]
+        [Tooltip("An array of AudioClips which belong to the set.")]
+        [SerializeField]
+        protected AudioClip[] m_Clips;
 
-    public void PlayAudioClip(Vector3 point, AudioClip clip, float volume = 1)
-    {
-        AudioSource.PlayClipAtPoint(clip, point, volume);
-    }
-
-    public void PlayAudioClip(Vector3 point, int clipIndex = -1, float volume = 1)
-    {
-        var clip = GetAudioClipInfo(clipIndex);
-        AudioSource.PlayClipAtPoint(clip, point, volume);
-    }
-
-    private AudioClip GetAudioClipInfo(int index = -1)
-    {
-        if (m_Clips == null || m_Clips.Length == 0)
+        public string Name
         {
-            return null;
+            get { return m_Name; }
+            set { m_Name = value; }
         }
 
-        if (index < 0 || index >= m_Clips.Length)
+        public AudioClip[] Clips
         {
-            index = Random.Range(0, m_Clips.Length);
+            get { return m_Clips; }
+            set { m_Clips = value; }
         }
 
-        var audioClip = m_Clips[index];
-        return audioClip;
+        public void PlayAudioClip(Vector3 point, AudioClip clip, float volume = 1)
+        {
+            AudioSource.PlayClipAtPoint(clip, point, volume);
+        }
+
+        public void PlayAudioClip(Vector3 point, int clipIndex = -1, float volume = 1)
+        {
+            var clip = GetAudioClipInfo(clipIndex);
+            AudioSource.PlayClipAtPoint(clip, point, volume);
+        }
+
+        private AudioClip GetAudioClipInfo(int index = -1)
+        {
+            if (m_Clips == null || m_Clips.Length == 0)
+            {
+                return null;
+            }
+
+            if (index < 0 || index >= m_Clips.Length)
+            {
+                index = Random.Range(0, m_Clips.Length);
+            }
+
+            var audioClip = m_Clips[index];
+            return audioClip;
+        }
     }
 }

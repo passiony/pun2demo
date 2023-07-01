@@ -4,32 +4,36 @@ using Photon.Pun;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-public class GunSupply : MonoBehaviourPunCallbacks, ISupply
+namespace MFPS
 {
-    public GameObject[] m_Guns;
-    public EGunType m_GunType;
-    public float m_Duration = 20;
-
-    IEnumerator Start()
+    public class GunSupply : MonoBehaviourPunCallbacks, ISupply
     {
-        var random = Random.Range(0, 2);
-        m_GunType = (EGunType)random;
-        m_Guns[random].SetActive(true);
+        public GameObject[] m_Guns;
 
-        yield return new WaitForSeconds(m_Duration);
-        if (PhotonNetwork.IsMasterClient)
+        // public EGunType m_GunType;
+        public float m_Duration = 20;
+
+        IEnumerator Start()
         {
-            PhotonNetwork.Destroy(gameObject);
+            var random = Random.Range(0, 2);
+            // m_GunType = (EGunType)random;
+            // m_Guns[random].SetActive(true);
+
+            yield return new WaitForSeconds(m_Duration);
+            if (PhotonNetwork.IsMasterClient)
+            {
+                PhotonNetwork.Destroy(gameObject);
+            }
         }
-    }
 
 
-    public void Supply(PlayerController _target)
-    {
-        _target.LoadGunSupply(m_GunType);
-        if (PhotonNetwork.IsMasterClient)
+        public void Supply(VRPlayerController _target)
         {
-            PhotonNetwork.Destroy(gameObject);
+            // _target.LoadGunSupply(m_GunType);
+            // if (PhotonNetwork.IsMasterClient)
+            // {
+            //     PhotonNetwork.Destroy(gameObject);
+            // }
         }
     }
 }

@@ -170,7 +170,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3424d68ba7a6fdf48bc0745e2dbc5c34, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_ID: 3
+  mType: 3
   FirePointLocation: {fileID: 8518157035941728417}
   m_FireRate: 1
   m_FireCount: 6
@@ -189,7 +189,7 @@ MonoBehaviour:
   m_MaxHitscanCollisionCount: 15
   m_ImpactLayers:
     serializedVersion: 2
-    m_Bits: 1
+    m_Bits: 4294967295
   m_HitscanTriggerInteraction: 2
   m_MuzzleFlash: {fileID: 7590671693157648550}
   m_Shell: {fileID: 1095859200011794, guid: a078637b5f34f6442b8324068601e134, type: 3}

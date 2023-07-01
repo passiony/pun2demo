@@ -1,9 +1,8 @@
 using System;
 using System.Collections;
-using Photon.Pun.MFPS;
+using MFPS;
 using TMPro;
 using UnityEngine;
-using MyGameManager = Photon.Pun.Demo.PunBasics.MyGameManager;
 
 public class GameUI : MonoBehaviour
 {
