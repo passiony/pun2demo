@@ -153,7 +153,7 @@ namespace MFPS
         {
             bool gameOver = false;
             int winTeam = 0;
-            for (int i = 0; i < scores.Length; i++)
+            for (int i = 1; i < scores.Length; i++)
             {
                 if (scores[i] >= 30)
                 {

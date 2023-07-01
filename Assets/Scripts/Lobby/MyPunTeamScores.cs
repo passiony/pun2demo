@@ -30,8 +30,8 @@ namespace MFPS
         {
             var key = MyPunTeamScores.PlayerScoreProp;
             Hashtable properties = new Hashtable(); // using PUN's implementation of Hashtable
-            var scores = new int[2];
-            scores[player.GetPhotonTeamCode()-1] = newScore;
+            var scores = new int[3];
+            scores[player.GetPhotonTeamCode()] = newScore;
             properties[key] = scores;
 
             PhotonNetwork.CurrentRoom.SetCustomProperties(properties);
@@ -42,7 +42,7 @@ namespace MFPS
         {
             var key = MyPunTeamScores.PlayerScoreProp;
             int[] scores = GetScores();
-            scores[player.GetPhotonTeamCode()-1] += scoreToAddToCurrent;
+            scores[player.GetPhotonTeamCode()] += scoreToAddToCurrent;
 
             Hashtable properties = new Hashtable(); // using PUN's implementation of Hashtable
             properties[key] = scores;
@@ -60,7 +60,7 @@ namespace MFPS
                 return (int[])score;
             }
 
-            return new[] { 0, 0};
+            return new[] { 0, 0, 0 };
         }
     }
 }
