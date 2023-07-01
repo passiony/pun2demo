@@ -2,8 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Photon.Pun;
-using Photon.Pun.MFPS;
+using Photon.Pun.UtilityScripts;
 using UnityEngine;
+using ScoreExtensions = Photon.Pun.MFPS.ScoreExtensions;
 
 public class VRPlayerController : MonoBehaviourPunCallbacks, IPunObservable, IDamageOriginator, IDamageTarget
 {
@@ -64,6 +65,11 @@ public class VRPlayerController : MonoBehaviourPunCallbacks, IPunObservable, IDa
             m_PlayerUI = go.GetComponent<MyPlayerUI>();
             m_PlayerUI.SetTarget(this, true);
         }
+    }
+
+    public bool IsSameTeam(VRPlayerController other)
+    {
+        return this.photonView.Owner.GetPhotonTeamCode() == other.photonView.Owner.GetPhotonTeamCode();
     }
 
     public void Fire()
@@ -157,7 +163,7 @@ public class VRPlayerController : MonoBehaviourPunCallbacks, IPunObservable, IDa
 
         Debug.Log("OnKillPlayer");
         m_KillCount++;
-        photonView.Owner.AddScore(1);
+        ScoreExtensions.AddScore(photonView.Owner, 1);
     }
 
     [PunRPC]

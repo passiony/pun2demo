@@ -196,7 +196,16 @@ public class GunWeapon : MonoBehaviour
             // The character can't shoot themself.
             if (hitGameObject.transform.IsChildOf(m_CharacterTransform))
             {
-                // continue;
+                continue;
+            }
+            
+            if (hitGameObject.CompareTag("Player"))
+            {
+                var player = hitGameObject.GetComponentInParent<VRPlayerController>();
+                if (player.IsSameTeam(m_Owner))
+                {
+                    continue;
+                }
             }
 
             if (m_Owner.photonView.IsMine)

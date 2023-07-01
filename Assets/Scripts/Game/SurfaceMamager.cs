@@ -89,13 +89,11 @@ public class SurfaceMamager : MonoBehaviour
         var position = hit.point + (hit.normal * 0.001f);
         var scale = Random.Range(0.15f, 0.25f);
 
-        var decal = GameObject.Instantiate(original, hit.transform,false);
-        decal.transform.position = position;
-        decal.transform.rotation = rotation;
-        // if (MathUtility.IsUniform(hit.transform.localScale))
-        // {
-        //     decal.transform.SetParent(hit.transform, false);
-        // }
+        var decal = GameObject.Instantiate(original, position, rotation);
+        if (MathUtility.IsUniform(hit.transform.localScale))
+        {
+            decal.transform.SetParent(hit.transform, false);
+        }
 
         if (scale < 1)
         {
