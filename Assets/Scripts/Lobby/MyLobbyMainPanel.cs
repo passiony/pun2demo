@@ -148,7 +148,7 @@ namespace Photon.Pun.MFPS
                 entry.GetComponent<MyPlayerListEntry>().Initialize(p.ActorNumber, p.NickName, team.Code);
 
                 object isPlayerReady;
-                if (p.CustomProperties.TryGetValue(GameUtility.PLAYER_READY, out isPlayerReady))
+                if (p.CustomProperties.TryGetValue(FPSGame.PLAYER_READY, out isPlayerReady))
                 {
                     entry.GetComponent<MyPlayerListEntry>().SetPlayerReady((bool)isPlayerReady);
                 }
@@ -160,7 +160,7 @@ namespace Photon.Pun.MFPS
 
             Hashtable props = new Hashtable
             {
-                { GameUtility.PLAYER_LOADED_LEVEL, false }
+                { FPSGame.PLAYER_LOADED_LEVEL, false }
             };
             PhotonNetwork.LocalPlayer.SetCustomProperties(props);
         }
@@ -226,7 +226,7 @@ namespace Photon.Pun.MFPS
             if (playerListEntries.TryGetValue(targetPlayer.ActorNumber, out entry))
             {
                 object isPlayerReady;
-                if (changedProps.TryGetValue(GameUtility.PLAYER_READY, out isPlayerReady))
+                if (changedProps.TryGetValue(FPSGame.PLAYER_READY, out isPlayerReady))
                 {
                     entry.GetComponent<MyPlayerListEntry>().SetPlayerReady((bool)isPlayerReady);
                 }
@@ -336,7 +336,7 @@ namespace Photon.Pun.MFPS
             foreach (Player p in PhotonNetwork.PlayerList)
             {
                 object isPlayerReady;
-                if (p.CustomProperties.TryGetValue(GameUtility.PLAYER_READY, out isPlayerReady))
+                if (p.CustomProperties.TryGetValue(FPSGame.PLAYER_READY, out isPlayerReady))
                 {
                     if (!(bool)isPlayerReady)
                     {

@@ -75,9 +75,7 @@ public class VRGameManager : MonoBehaviourPunCallbacks
             // we're in a room. spawn a character for the local player. it gets synced by using PhotonNetwork.Instantiate
             var go = PhotonNetwork.Instantiate(this.playerPrefab.name, born.position, born.rotation, 0);
             var tracking = go.GetComponent<IKTracking>();
-            tracking.SetHeadVisible(false);
             XRPlayer.Instance.SetTracking(tracking);
-            gameUI.SetActive(true);
         }
     }
 

@@ -1,4 +1,5 @@
 using System.Collections;
+using Photon.Pun.MFPS;
 using UnityEngine;
 
 public class GunItem : MonoBehaviour
@@ -7,6 +8,6 @@ public class GunItem : MonoBehaviour
 
     void Start()
     {
-        Destroy(gameObject,10);
+        Destroy(gameObject, FPSGame.REBORN_TIME);
     }
 }

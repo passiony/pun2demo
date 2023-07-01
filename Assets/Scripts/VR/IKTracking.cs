@@ -9,11 +9,11 @@ public class IKTracking : MonoBehaviourPun
     [SerializeField] private Transform leftHandAnchor;
     [SerializeField] private Transform rightHandAnchor;
 
-    [SerializeField] private VRAwatar m_Avatar;
+    [SerializeField] private VRAvatar m_Avatar;
 
     [SerializeField] private bool m_IkEnable;
     public bool IkEnable => m_IkEnable;
-    public VRAwatar Avatar=> m_Avatar;
+    public VRAvatar Avatar=> m_Avatar;
 
     public void UpdateRoot(Vector3 pos)
     {

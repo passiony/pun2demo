@@ -44,9 +44,9 @@ public class WeaponComponent : MonoBehaviour
     public void UseWeapon()
     {
         bool success = m_CurrentWeapon.UseItem();
-        if (!success && m_AutoReload)
+        if (!success)
         {
-            m_CurrentWeapon.Reload();
+            m_CurrentWeapon.CheckReload(m_AutoReload);
         }
     }
 

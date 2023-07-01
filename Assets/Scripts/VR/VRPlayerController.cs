@@ -17,10 +17,12 @@ public class VRPlayerController : MonoBehaviourPunCallbacks, IPunObservable, IDa
     private WeaponComponent m_WeaponComponent;
     private IKTracking m_IkTracking;
     private MyPlayerUI m_PlayerUI;
+    private VRAvatar m_Avatar;
 
     public int HP => m_Hp;
     public int KillCount => m_KillCount;
     public WeaponComponent WeaponComponent => m_WeaponComponent;
+    public VRAvatar Avatar => m_Avatar;
 
     public bool IsAlive()
     {
@@ -36,20 +38,32 @@ public class VRPlayerController : MonoBehaviourPunCallbacks, IPunObservable, IDa
 
         m_WeaponComponent = this.GetComponentInChildren<WeaponComponent>();
         m_IkTracking = this.GetComponent<IKTracking>();
+        m_Avatar = m_IkTracking.Avatar;
+
         if (photonView.IsMine)
         {
             XRPlayer.Instance.SetPlayer(this);
-            GameUI.Instance.SetTarget(this);
+        }
+
+        InitPlayerUI();
+        m_IkTracking.UseRagdoll(true);
+    }
+
+    void InitPlayerUI()
+    {
+        if (photonView.IsMine)
+        {
+            m_PlayerUI = transform.GetComponentInChildren<MyPlayerUI>(true);
+            m_PlayerUI.gameObject.SetActive(true);
+            m_PlayerUI.SetTarget(this, false);
         }
         else
         {
             var prefab = Resources.Load<GameObject>("PlayerUI");
             var go = GameObject.Instantiate(prefab);
             m_PlayerUI = go.GetComponent<MyPlayerUI>();
-            m_PlayerUI.SetTarget(this);
+            m_PlayerUI.SetTarget(this, true);
         }
-
-        m_IkTracking.UseRagdoll(true);
     }
 
     public void Fire()
@@ -92,9 +106,16 @@ public class VRPlayerController : MonoBehaviourPunCallbacks, IPunObservable, IDa
 
     public void Damage(DamageData damageData)
     {
-        m_Hp -= (int)damageData.Amount;
+        var damage = damageData.Amount;
+        if (damageData.HitCollider.CompareTag("Player"))
+        {
+            var part = damageData.HitCollider.GetComponent<PlayerBody>();
+            damage = part.GetRealDamage(damage);
+        }
+
+        m_Hp -= (int)damage;
         var sourceViewId = damageData.DamageOriginator.OriginatingGameObject.GetPhotonView().ViewID;
-        photonView.RPC("OnApplyDamage", RpcTarget.All, (int)damageData.Amount, sourceViewId);
+        photonView.RPC("OnApplyDamage", RpcTarget.All, (int)damage, sourceViewId);
     }
 
     [PunRPC]
@@ -153,10 +174,7 @@ public class VRPlayerController : MonoBehaviourPunCallbacks, IPunObservable, IDa
         if (photonView.IsMine)
         {
             Debug.Log("重生");
-            GameUI.Instance.ShowDeadPanel(XRPlayer.Instance.Head, () =>
-            {
-                photonView.RPC("OnReborn", RpcTarget.All);
-            });
+            GameUI.Instance.ShowDeadPanel(() => { photonView.RPC("OnReborn", RpcTarget.All); });
         }
     }
 
@@ -169,8 +187,10 @@ public class VRPlayerController : MonoBehaviourPunCallbacks, IPunObservable, IDa
             m_PlayerUI.gameObject.SetActive(true);
         m_IkTracking.UseRagdoll(true);
         m_WeaponComponent.LoadWeapon(EGunID.Pistol);
-        if (photonView.IsMine)
+        if (photonView.Owner.IsLocal)
             m_IkTracking.SetHeadVisible(false);
+        else
+            m_IkTracking.SetHeadVisible(true);
     }
 
     [SerializeField] private bool m_Dead = false;

@@ -51,8 +51,8 @@ namespace Photon.Pun.MFPS
             {
                 Hashtable initialProps = new Hashtable()
                 {
-                    { GameUtility.PLAYER_READY, isPlayerReady },
-                    { GameUtility.PLAYER_LIVES, GameUtility.PLAYER_MAX_LIVES },
+                    { FPSGame.PLAYER_READY, isPlayerReady },
+                    { FPSGame.PLAYER_LIVES, FPSGame.PLAYER_MAX_LIVES },
                 };
                 PhotonNetwork.LocalPlayer.SetCustomProperties(initialProps);
                 PhotonNetwork.LocalPlayer.SetScore(0);
@@ -62,7 +62,7 @@ namespace Photon.Pun.MFPS
                     isPlayerReady = !isPlayerReady;
                     // SetPlayerReady(isPlayerReady);
 
-                    Hashtable props = new Hashtable() { { GameUtility.PLAYER_READY, isPlayerReady } };
+                    Hashtable props = new Hashtable() { { FPSGame.PLAYER_READY, isPlayerReady } };
                     PhotonNetwork.LocalPlayer.SetCustomProperties(props);
 
                     if (PhotonNetwork.IsMasterClient)
@@ -114,7 +114,7 @@ namespace Photon.Pun.MFPS
 
         public void SetPlayerTeam(int team)
         {
-            PlayerColorImage.color = GameUtility.GetTeamColor(team);
+            PlayerColorImage.color = FPSGame.GetTeamColor(team);
         }
     }
 }

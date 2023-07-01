@@ -17,6 +17,7 @@ public class MyPlayerUI : MonoBehaviour
     [SerializeField] private Vector3 screenOffset = new Vector3(0f, 1, 0f);
 
     [SerializeField] private TextMeshProUGUI playerNameText;
+    [SerializeField] private TextMeshProUGUI playerHpText;
 
     [SerializeField] private Slider playerHealthSlider;
 
@@ -28,12 +29,15 @@ public class MyPlayerUI : MonoBehaviour
 
     Vector3 targetPosition;
 
+    private bool followTarget = false;
+
     void Update()
     {
         // Reflect the Player Health
         if (playerHealthSlider != null)
         {
             playerHealthSlider.value = target.HP / (float)target.MaxHP;
+            playerHpText.text = $"{target.HP}/{target.MaxHP}";
         }
     }
 
@@ -41,22 +45,24 @@ public class MyPlayerUI : MonoBehaviour
     {
         // #Critical
         // Follow the Target GameObject on screen.
-        if (targetTransform != null)
+        if (targetTransform && followTarget)
         {
             var position = targetTransform.position;
             targetPosition = position;
-            targetPosition.y += characterControllerHeight;
 
             // this.transform.position = Camera.main.WorldToScreenPoint(targetPosition) + screenOffset;
             this.transform.position = targetPosition + screenOffset;
 
-            var forward = position - XRPlayer.Instance.transform.position;
+            var forward = position - XRPlayer.Instance.Head.position;
             forward.y = 0;
-            transform.forward = forward;
+            if (forward.z != 0)
+            {
+                transform.forward = forward;
+            }
         }
     }
 
-    public void SetTarget(VRPlayerController _target)
+    public void SetTarget(VRPlayerController _target, bool follow)
     {
         if (_target == null)
         {
@@ -64,17 +70,9 @@ public class MyPlayerUI : MonoBehaviour
             return;
         }
 
-        // Cache references for efficiency because we are going to reuse them.
         this.target = _target;
+        followTarget = follow;
         targetTransform = this.target.GetComponent<Transform>();
-
-        CharacterController _characterController = this.target.GetComponent<CharacterController>();
-
-        // Get data from the Player that won't change during the lifetime of this Component
-        if (_characterController != null)
-        {
-            characterControllerHeight = _characterController.height;
-        }
 
         if (playerNameText != null)
         {

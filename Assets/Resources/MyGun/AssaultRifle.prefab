@@ -681,7 +681,7 @@ MonoBehaviour:
   m_DamageAmount: 50
   m_ImpactForce: 2
   m_ImpactForceFrames: 15
-  m_ClipSize: 50
+  m_ClipSize: 100
   m_HitscanFireRange: 1000
   m_MaxHitscanCollisionCount: 15
   m_ImpactLayers:

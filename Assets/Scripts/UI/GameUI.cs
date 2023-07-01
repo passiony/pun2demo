@@ -1,14 +1,13 @@
 using System;
 using System.Collections;
-using Photon.Pun.Demo.PunBasics;
+using Photon.Pun.MFPS;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
+using MyGameManager = Photon.Pun.Demo.PunBasics.MyGameManager;
 
 public class GameUI : MonoBehaviour
 {
     public static GameUI Instance;
-    private VRPlayerController target;
     [SerializeField] private TextMeshProUGUI[] scoreTexts;
     [SerializeField] private GameObject winPanel;
     [SerializeField] private GameObject losePanel;
@@ -21,9 +20,19 @@ public class GameUI : MonoBehaviour
         Instance = this;
     }
 
-    public void SetTarget(VRPlayerController _target)
+    void Update()
     {
-        target = _target;
+        if (XRPlayer.Instance.Player)
+        {
+            transform.position = XRPlayer.Instance.Player.Avatar.Head.position + Vector3.up;
+
+            var forward = transform.position - XRPlayer.Instance.Head.position;
+            forward.y = 0;
+            if (forward.z != 0)
+            {
+                transform.forward = forward;
+            }
+        }
     }
 
     public void RefreshScoreBorad(int[] scores)
@@ -43,17 +52,16 @@ public class GameUI : MonoBehaviour
 
     public void ShowDamage()
     {
-        healthFlash.SetActive(true);
+        // healthFlash.SetActive(true);
     }
 
-    public void ShowDeadPanel(Transform avatar, Action callback)
+    public void ShowDeadPanel(Action callback)
     {
         deadPanel.SetActive(true);
-        deadPanel.transform.position = avatar.position + avatar.forward * 2;
-        
+
         // Cursor.lockState = CursorLockMode.None;
         // Cursor.visible = true;
-        StartCoroutine(CoTimerInterval(5, 1, callback));
+        StartCoroutine(CoTimerInterval(FPSGame.REBORN_TIME, 1, callback));
     }
 
     IEnumerator CoTimerInterval(int count, float delay, Action callback)

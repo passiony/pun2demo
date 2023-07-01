@@ -20,7 +20,7 @@ public class GunWeapon : MonoBehaviour
     protected VRPlayerController m_Owner;
     protected Transform m_CharacterTransform;
     protected Animator m_Animator;
-    
+
     [SerializeField] protected Transform FirePointLocation;
 
     [Tooltip("The amount of time that must elapse before the item can be used again.")] [SerializeField]
@@ -120,6 +120,14 @@ public class GunWeapon : MonoBehaviour
         m_Animator.Play("Equip");
     }
 
+    public void CheckReload(bool autoReload)
+    {
+        if (ClipRemaining <= 0 && autoReload)
+        {
+            Reload();
+        }
+    }
+
     public void Reload()
     {
         m_ClipRemaining = m_ClipSize;
@@ -127,7 +135,7 @@ public class GunWeapon : MonoBehaviour
         m_FireAudio.PlayReloadFire();
         m_Animator.Play("Reload");
     }
-    
+
     public virtual bool UseItem()
     {
         if (Time.time - m_LastUseTime > m_FireRate)
@@ -156,9 +164,9 @@ public class GunWeapon : MonoBehaviour
         m_Animator.Play("Fire");
 
         m_Firing = true;
-        m_ClipRemaining--;
+        m_ClipRemaining -= m_FireCount;
         UpdateClipText();
-        
+
         for (int i = 0; i < m_FireCount; ++i)
         {
             HitscanFire();
@@ -188,7 +196,7 @@ public class GunWeapon : MonoBehaviour
             // The character can't shoot themself.
             if (hitGameObject.transform.IsChildOf(m_CharacterTransform))
             {
-                continue;
+                // continue;
             }
 
             if (m_Owner.photonView.IsMine)
@@ -198,8 +206,7 @@ public class GunWeapon : MonoBehaviour
                 // If the shield didn't absorb all of the damage then it should be applied to the character.
                 if (damageAmount > 0)
                 {
-                    Debug.Log("HitTarget:" + hitGameObject.name);
-
+                    // Debug.Log("HitTarget:" + hitGameObject.name);
                     var damageTarget = DamageUtility.GetDamageTarget(hitGameObject);
                     if (damageTarget != null)
                     {

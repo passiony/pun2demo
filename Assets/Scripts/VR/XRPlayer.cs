@@ -8,14 +8,21 @@ public class XRPlayer : MonoBehaviour
 
     private IKTracking m_IKTracking;
 
-    [FormerlySerializedAs("Head")] [SerializeField] private Transform m_Head;
-    [FormerlySerializedAs("LeftHand")] [SerializeField] private Transform m_LeftHand;
-    [FormerlySerializedAs("RightHand")] [SerializeField] private Transform m_RightHand;
+    [FormerlySerializedAs("Head")] [SerializeField]
+    private Transform m_Head;
+
+    [FormerlySerializedAs("LeftHand")] [SerializeField]
+    private Transform m_LeftHand;
+
+    [FormerlySerializedAs("RightHand")] [SerializeField]
+    private Transform m_RightHand;
 
     public Transform Head => m_Head;
     private VRPlayerController m_Player;
     private bool m_RightTrigger;
     private bool m_LeftTrigger;
+
+    public VRPlayerController Player => m_Player;
 
     private void Awake()
     {
@@ -27,6 +34,7 @@ public class XRPlayer : MonoBehaviour
     public void SetTracking(IKTracking tracking)
     {
         m_IKTracking = tracking;
+        tracking.SetHeadVisible(false);
     }
 
     void Update()

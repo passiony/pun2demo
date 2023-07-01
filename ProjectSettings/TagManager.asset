@@ -7,9 +7,9 @@ TagManager:
   - Supply
   - Grass
   - Metal
-  - Title
   - Water
   - Wood
+  - Tile
   layers:
   - Default
   - TransparentFX
