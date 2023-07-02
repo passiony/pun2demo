@@ -1,6 +1,7 @@
 using System;
 using MFPS;
 using TMPro;
+using UniRx;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -113,7 +114,7 @@ namespace MFPS
             m_CharacterTransform = owner.transform;
             m_ClipRemaining = m_ClipSize;
             UpdateClipText();
-            m_FireAudio.PlayEquipFire();
+            m_FireAudio.PlayEquipAudio();
             m_Animator.Play("Equip");
         }
 
@@ -127,10 +128,14 @@ namespace MFPS
 
         public void Reload()
         {
-            m_ClipRemaining = m_ClipSize;
-            UpdateClipText();
-            m_FireAudio.PlayReloadFire();
+            m_FireAudio.PlayReloadAudio();
             m_Animator.Play("Reload");
+
+            Observable.Timer(TimeSpan.FromSeconds(1)).Subscribe((x) =>
+            {
+                m_ClipRemaining = m_ClipSize;
+                UpdateClipText();
+            });
         }
 
         public virtual bool UseItem()

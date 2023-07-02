@@ -172,7 +172,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mType: 3
   FirePointLocation: {fileID: 8518157035941728417}
-  m_FireRate: 1
+  m_FireRate: 2
   m_FireCount: 6
   m_Spread: 120
   m_FireAudio:
@@ -184,7 +184,7 @@ MonoBehaviour:
   m_DamageAmount: 30
   m_ImpactForce: 2
   m_ImpactForceFrames: 15
-  m_ClipSize: 60
+  m_ClipSize: 6
   m_HitscanFireRange: 100
   m_MaxHitscanCollisionCount: 15
   m_ImpactLayers:

@@ -31,19 +31,19 @@ namespace MFPS
             m_AudioSource.Play();
         }
 
-        public void PlayEquipFire()
+        public void PlayEquipAudio()
         {
             m_AudioSource.clip = m_EquipAudioClip;
             m_AudioSource.Play();
         }
 
-        public void PlayUnequipFire()
+        public void PlayUnequipAudio()
         {
             m_AudioSource.clip = m_UnequipAudioClip;
             m_AudioSource.Play();
         }
 
-        public void PlayReloadFire()
+        public void PlayReloadAudio()
         {
             m_AudioSource.clip = m_ReloadAudioClip;
             m_AudioSource.Play();

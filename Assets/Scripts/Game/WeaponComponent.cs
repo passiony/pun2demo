@@ -45,11 +45,8 @@ namespace MFPS
 
         public void UseWeapon()
         {
-            bool success = m_CurrentWeapon.UseItem();
-            if (!success)
-            {
-                m_CurrentWeapon.CheckReload(m_AutoReload);
-            }
+            m_CurrentWeapon.UseItem();
+            m_CurrentWeapon.CheckReload(m_AutoReload);
         }
 
         public void SwitchWeapon()
