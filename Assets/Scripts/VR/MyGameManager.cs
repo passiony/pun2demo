@@ -8,6 +8,7 @@
 // <author>developer@exitgames.com</author>
 // --------------------------------------------------------------------------------------------------------------------
 
+using System;
 using Photon.Pun;
 using Photon.Pun.UtilityScripts;
 using UnityEngine;
@@ -17,14 +18,21 @@ using Random = UnityEngine.Random;
 
 namespace MFPS
 {
-    public class VRGameManager : MonoBehaviourPunCallbacks
+    public class MyGameManager : MonoBehaviourPunCallbacks
     {
-        public static VRGameManager Instance;
+        [Serializable]
+        private class TeamPoint
+        {
+            public string TeamCode;
+            public Transform[] Points;
+        }
+
+        public static MyGameManager Instance;
 
         [SerializeField] private GameObject gameUI;
         [SerializeField] private GameObject playerPrefab;
         [SerializeField] private GameObject[] supplies;
-        [SerializeField] private Transform[] bornPoints;
+        [SerializeField] private TeamPoint[] bornPoints;
 
         [SerializeField] public int m_Interval = 20;
         [SerializeField] private int m_WinCount = 10;
@@ -59,22 +67,16 @@ namespace MFPS
             }
             else
             {
-                int index = Random.Range(0, bornPoints.Length);
-                var born = bornPoints[index];
+                var team = PhotonNetwork.LocalPlayer.GetPhotonTeamCode();
+                var born = GetBornPoit(team);
+
                 Debug.LogFormat("We are Instantiating LocalPlayer from {0}", SceneManagerHelper.ActiveSceneName);
                 // we're in a room. spawn a character for the local player. it gets synced by using PhotonNetwork.Instantiate
                 var go = PhotonNetwork.Instantiate(this.playerPrefab.name, born.position, born.rotation, 0);
                 var tracking = go.GetComponent<IKTracking>();
-                XRPlayer.Instance.SetTracking(tracking);
+                XRPlayer.Instance.SetTracking(tracking, born);
+                
             }
-        }
-
-        public Transform GetRandomBornPoint()
-        {
-            int index = Random.Range(0, bornPoints.Length);
-            var born = bornPoints[index];
-
-            return born;
         }
 
         /// <summary>
@@ -122,19 +124,6 @@ namespace MFPS
             Application.Quit();
         }
 
-        void LoadArena()
-        {
-            // if ( ! PhotonNetwork.IsMasterClient )
-            // {
-            // 	Debug.LogError( "PhotonNetwork : Trying to Load a level but we are not the master Client" );
-            // 	return;
-            // }
-            //
-            // Debug.LogFormat( "PhotonNetwork : Loading Level : {0}", PhotonNetwork.CurrentRoom.PlayerCount );
-            //
-            // PhotonNetwork.LoadLevel("PunBasics-Room for "+PhotonNetwork.CurrentRoom.PlayerCount);
-        }
-
         void LoadSupplies()
         {
             int randon = Random.Range(0, 2);
@@ -142,6 +131,13 @@ namespace MFPS
 
             Vector3 point = new Vector3(Random.Range(-15, 15), 10, Random.Range(-20, 20));
             PhotonNetwork.InstantiateRoomObject(prefab.name, point, Quaternion.identity);
+        }
+
+        public Transform GetBornPoit(int teamCode)
+        {
+            var teamPoint = bornPoints[teamCode - 1];
+            var born = teamPoint.Points[Random.Range(0, teamPoint.Points.Length)];
+            return born;
         }
 
         void CheckGameOver(int[] scores)
@@ -159,6 +155,7 @@ namespace MFPS
                     {
                         GameUI.Instance.ShowLosePanel();
                     }
+                    break;
                 }
             }
         }
