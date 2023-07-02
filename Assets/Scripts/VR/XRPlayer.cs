@@ -32,14 +32,17 @@ namespace MFPS
             m_LeftHand.GetComponent<XRInputEvent>().OnTriggerButton.AddListener((x) => { m_LeftTrigger = x; });
         }
 
-        public void SetTracking(IKTracking tracking, Transform born)
+        public void SetTracking(IKTracking tracking)
         {
             m_IKTracking = tracking;
             tracking.SetHeadVisible(false);
+        }
+
+        public void SetBorn(Transform born)
+        {
             transform.position = born.position;
             transform.rotation = born.rotation;
         }
-
         void Update()
         {
             if (m_IKTracking && m_IKTracking.IkEnable)

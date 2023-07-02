@@ -196,7 +196,8 @@ namespace MFPS
             else
                 m_IkTracking.SetHeadVisible(true);
 
-            MyGameManager.Instance.GetBornPoit(photonView.Owner.GetPhotonTeamCode());
+            var born = MyGameManager.Instance.GetBornPoit(photonView.Owner.GetPhotonTeamCode());
+            XRPlayer.Instance.SetBorn(born);
         }
 
         [SerializeField] private bool m_Dead = false;

@@ -74,8 +74,8 @@ namespace MFPS
                 // we're in a room. spawn a character for the local player. it gets synced by using PhotonNetwork.Instantiate
                 var go = PhotonNetwork.Instantiate(this.playerPrefab.name, born.position, born.rotation, 0);
                 var tracking = go.GetComponent<IKTracking>();
-                XRPlayer.Instance.SetTracking(tracking, born);
-                
+                XRPlayer.Instance.SetTracking(tracking);
+                XRPlayer.Instance.SetBorn(born);
             }
         }
 
@@ -155,6 +155,7 @@ namespace MFPS
                     {
                         GameUI.Instance.ShowLosePanel();
                     }
+
                     break;
                 }
             }
