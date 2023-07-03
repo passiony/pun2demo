@@ -204,7 +204,7 @@ namespace MFPS
                 if (hitGameObject.CompareTag("Player"))
                 {
                     var player = hitGameObject.GetComponentInParent<VRPlayerController>();
-                    if (player.IsSameTeam(m_Owner))
+                    if (player && player.IsSameTeam(m_Owner))
                     {
                         continue;
                     }

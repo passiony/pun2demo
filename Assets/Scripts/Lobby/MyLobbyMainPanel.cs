@@ -14,8 +14,6 @@ namespace MFPS
 {
     public class MyLobbyMainPanel : MonoBehaviourPunCallbacks
     {
-        [Header("Loading")] [SerializeField] private LoaderAnime loaderAnime;
-
         [Header("Login Panel")] [SerializeField]
         private GameObject LoginPanel;
 
@@ -57,11 +55,6 @@ namespace MFPS
 
         public void Awake()
         {
-            if (loaderAnime == null)
-            {
-                Debug.LogError("<Color=Red><b>Missing</b></Color> loaderAnime Reference.", this);
-            }
-
             PhotonNetwork.AutomaticallySyncScene = true;
             cachedRoomList = new Dictionary<string, RoomInfo>();
             roomListEntries = new Dictionary<string, GameObject>();
@@ -287,7 +280,6 @@ namespace MFPS
         public void OnLoginButtonClicked()
         {
             isConnecting = true;
-            loaderAnime?.StartLoaderAnimation();
 
             string playerName = PlayerNameInput.text;
             string address = AddressInput.text;
